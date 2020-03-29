@@ -1,10 +1,18 @@
 # sphinx.nvim
 
-Sphinx integrations for Neovim.
+[Sphinx](https://www.sphinx-doc.org/) integrations for Neovim.
 
 # Available integrations
 
 ## [coc.nvim](https://github.com/neoclide/coc.nvim/)
+
+Source for [cross-referencing roles](https://www.sphinx-doc.org/en/master/usage/restructuredtext/roles.html#cross-referencing-syntax),
+i.e `:ref:`, `:doc:`, `py:func`, etc.
+
+**Note:** this plugin makes use of the inventory file from Sphinx,
+so you need to have built the docs at least once to get suggestions,
+and rebuild when your docs change to get the up to date suggestions.
+You can use [sphinx-autobuild](https://github.com/GaretJax/sphinx-autobuild) to rebuild your docs automatically when there is a change.
 
 # Coming soon
 
@@ -20,7 +28,7 @@ Put this in your `init.vim`.
 Plug 'stsewd/sphinx.nvim'
 ```
 
-**Note:** You need to have `coc.nvim` installed to use the `coc.nvim` integration.
+**Note:** you need to have `coc.nvim` installed to use the `coc.nvim` integration.
 See <https://github.com/neoclide/coc.nvim/#quick-start>.
 
 # Configuration
