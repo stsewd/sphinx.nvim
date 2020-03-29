@@ -21,7 +21,7 @@ class Plugin:
         options = args[0]
         filepath = options.get("filepath")
         line = options.get("line")
-        colnr = options.get("colnr")
+        colnr = options.get("colnr") - 1
 
         results = []
         try:

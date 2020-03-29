@@ -3,7 +3,6 @@ import textwrap
 from functools import namedtuple
 from pathlib import Path
 
-from sphinx.config import eval_config_file
 from sphinx.ext.intersphinx import fetch_inventory
 
 Settings = namedtuple("Settings", ["output_dirs", "local_only"])
@@ -21,11 +20,11 @@ def get_current_role(line, column):
     # :role:`Text <target>`
     # :domain:role:`target`
     role_pattern = re.compile(r"(?=:(?P<role>[a-zA-Z0-9_-]+(:[a-zA-Z0-9_-]+)?):`)")
-    match = role_pattern.search(line, 0, column + 1)
+    match = role_pattern.search(line, 0, column)
     return match.group("role") if match else None
 
 
-def get_completion_list(filepath, role, settings, nvim):
+def get_completion_list(filepath, role, settings):
     source_dir = find_source_dir(Path(filepath))
     if not source_dir:
         return []
@@ -33,7 +32,6 @@ def get_completion_list(filepath, role, settings, nvim):
 
     results = []
     for type_, value in invdata.items():
-        nvim.out_write(f"role: {role} type: {type_}\n")
         if not contains_role(role, type_):
             continue
         for name, info in value.items():
@@ -52,17 +50,6 @@ def get_completion_list(filepath, role, settings, nvim):
                 name = "/" + name.lstrip("/")
             results.append({"word": name, "menu": menu, "info": info.strip()})
     return results
-
-
-def contains_role(super_role, role):
-    """Check if `super_role` contains `role`."""
-    role = re.sub("^std:", "", role)
-    super_role = re.sub("^std:", "", super_role)
-    return (
-        super_role in ROLE_ANY
-        or role == super_role
-        or role in ROLE_ALIASES.get(super_role, [])
-    )
 
 
 def find_source_dir(filepath):
@@ -97,3 +84,14 @@ def fetch_local_inventory(source_dir, output_dirs):
         if path.exists():
             invdata = fetch_inventory(MockApp(), "", str(path))
     return invdata
+
+
+def contains_role(super_role, role):
+    """Check if `super_role` contains `role`."""
+    role = re.sub("^std:", "", role)
+    super_role = re.sub("^std:", "", super_role)
+    return (
+        super_role in ROLE_ANY
+        or role == super_role
+        or role in ROLE_ALIASES.get(super_role, [])
+    )

@@ -10,14 +10,14 @@ Source for [cross-referencing roles](https://www.sphinx-doc.org/en/master/usage/
 i.e `:ref:`, `:doc:`, `py:func`, etc.
 
 **Note:** this plugin makes use of the inventory file from Sphinx,
-so you need to have built the docs at least once to get suggestions,
+so you need to have built your docs at least once to get suggestions,
 and rebuild when your docs change to get the up to date suggestions.
 You can use [sphinx-autobuild](https://github.com/GaretJax/sphinx-autobuild) to rebuild your docs automatically when there is a change.
 
 # Coming soon
 
 - Support for Intersphinx
-- Integration with (fzf)[https://github.com/junegunn/fzf/]
+- Integration with [fzf](https://github.com/junegunn/fzf/)
 
 # Installation
 
@@ -25,7 +25,7 @@ Install using [vim-plug](https://github.com/junegunn/vim-plug).
 Put this in your `init.vim`.
 
 ```vim
-Plug 'stsewd/sphinx.nvim'
+Plug 'stsewd/sphinx.nvim', { 'do': ':UpdateRemotePlugins' }
 ```
 
 **Note:** you need to have `coc.nvim` installed to use the `coc.nvim` integration.
