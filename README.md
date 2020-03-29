@@ -1,5 +1,7 @@
 # sphinx.nvim
 
+![CI](https://github.com/stsewd/sphinx.nvim/workflows/CI/badge.svg)
+
 [Sphinx](https://www.sphinx-doc.org/) integrations for Neovim.
 
 # Available integrations
