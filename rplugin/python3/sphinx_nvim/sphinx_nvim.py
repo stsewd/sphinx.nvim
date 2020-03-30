@@ -36,6 +36,8 @@ def get_completion_list(filepath, role, settings):
             continue
         for name, info in value.items():
             domain, priority, uri, display_name = info
+            if display_name.strip() == '-':
+                display_name = name
             info = textwrap.dedent(
                 f"""
                 {display_name}
