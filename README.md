@@ -4,9 +4,14 @@
 
 [Sphinx](https://www.sphinx-doc.org/) integrations for Neovim.
 
+**This plugin is still under development, some functionalities may change.**
+
 # Available integrations
 
 ## [coc.nvim](https://github.com/neoclide/coc.nvim/)
+
+![01](https://user-images.githubusercontent.com/4975310/77864888-f41f4080-71f0-11ea-9108-741df3cbf1ce.png)
+![02](https://user-images.githubusercontent.com/4975310/77864900-fed9d580-71f0-11ea-8e5e-60c8df1c06e9.png)
 
 Source for [cross-referencing roles](https://www.sphinx-doc.org/en/master/usage/restructuredtext/roles.html#cross-referencing-syntax),
 i.e `:ref:`, `:doc:`, `py:func`, etc.
