@@ -15,7 +15,7 @@ def test(session):
 
 
 @nox.session
-def blacken(session):
+def format(session):
     """Run black code formater."""
     session.install("black", "isort")
     session.run("isort", "--recursive", *files)
