@@ -24,10 +24,10 @@ def test_get_current_role(role, line, max_index):
 @pytest.mark.parametrize(
     "file, dir",
     [
-        ("docs/index.rst", "docs/"),
-        ("docs/nested/index.rst", "docs/"),
-        ("docs-src/source/index.rst", "docs-src/source/"),
-        ("docs-src/source/nested/index.rst", "docs-src/source/"),
+        ("data/docs/index.rst", "data/docs/"),
+        ("data/docs/nested/index.rst", "data/docs/"),
+        ("data/docs-src/source/index.rst", "data/docs-src/source/"),
+        ("data/docs-src/source/nested/index.rst", "data/docs-src/source/"),
     ],
 )
 def test_find_source_dir(file, dir):
@@ -52,6 +52,8 @@ def test_find_source_dir(file, dir):
         (True, "std:ref", "label"),
         (True, "std:ref", "std:label"),
         (True, "py:class", "py:class"),
+        (True, "std:option", "std:cmdoption"),
+        (True, "option", "cmdoption"),
         (False, "ref", "doc"),
         (False, "std:label", "std:doc"),
         (False, "doc", "downloads"),
