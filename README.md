@@ -1,6 +1,6 @@
 # sphinx.nvim
 
-![CI](https://github.com/stsewd/sphinx.nvim/workflows/CI/badge.svg)
+[![CI](https://github.com/stsewd/sphinx.nvim/workflows/CI/badge.svg)](https://github.com/stsewd/sphinx.nvim/actions?query=workflow%3ACI)
 
 [Sphinx](https://www.sphinx-doc.org/) integrations for Neovim.
 
