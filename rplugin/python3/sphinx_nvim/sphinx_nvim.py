@@ -9,6 +9,7 @@ Settings = namedtuple("Settings", ["output_dirs", "local_only"])
 
 ROLE_ALIASES = {
     "ref": {"label"},
+    "option": {"cmdoption"},
 }
 ROLE_ANY = {"any"}
 
@@ -19,7 +20,8 @@ def get_current_role(line, column):
     # :role:`target`
     # :role:`Text <target>`
     # :domain:role:`target`
-    role_pattern = re.compile(r"(?=:(?P<role>[a-zA-Z0-9_-]+(:[a-zA-Z0-9_-]+)?):`)")
+    # :domain:one:two:`target`
+    role_pattern = re.compile(r"(?=:(?P<role>[a-zA-Z0-9_-]+(:[a-zA-Z0-9_-]+)*):`)")
     match = role_pattern.search(line, 0, column)
     return match.group("role") if match else None
 
@@ -36,7 +38,7 @@ def get_completion_list(filepath, role, settings):
             continue
         for name, info in value.items():
             domain, priority, uri, display_name = info
-            if display_name.strip() == '-':
+            if display_name.strip() == "-":
                 display_name = name
             info = textwrap.dedent(
                 f"""

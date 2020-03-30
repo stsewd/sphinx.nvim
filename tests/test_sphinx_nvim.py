@@ -13,6 +13,7 @@ from sphinx_nvim.sphinx_nvim import contains_role, find_source_dir, get_current_
         ("ref", "- :ref:`Text <label>`, foo.", 19),
         ("py:mod", "Check the method :py:mod:`foo.bar`", 8),
         ("py:mod", "Check :py:mod:`this method <foo.bar>`", 22),
+        ("rst:directive:option", ":rst:directive:option:`foo`", 4),
     ],
 )
 def test_get_current_role(role, line, max_index):
