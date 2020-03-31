@@ -26,19 +26,22 @@ def get_current_role(line, column):
     return match.group("role") if match else None
 
 
-def get_completion_list(filepath, role, settings):
+def get_completion_list(filepath, line, column, settings):
+    role = get_current_role(line, column)
+    results = []
+    if not role:
+        return results
     source_dir = find_source_dir(Path(filepath))
     if not source_dir:
-        return []
+        return results
     invdata = fetch_local_inventory(source_dir, settings.output_dirs)
 
-    results = []
     for type_, value in invdata.items():
         if not contains_role(role, type_):
             continue
         for name, info in value.items():
             domain, priority, uri, display_name = info
-            if display_name.strip() == "-":
+            if not display_name or display_name.strip() == "-":
                 display_name = name
             info = textwrap.dedent(
                 f"""
@@ -47,11 +50,11 @@ def get_completion_list(filepath, role, settings):
                 {domain} -> {uri}
                 """
             )
-            menu = f"[{type_}]"
-
             # Allways use absolute paths for the doc role
             if type_ == "std:doc":
                 name = "/" + name.lstrip("/")
+
+            menu = f"[{type_}]"
             results.append({"word": name, "menu": menu, "info": info.strip()})
     return results
 
@@ -87,6 +90,7 @@ def fetch_local_inventory(source_dir, output_dirs):
         path = source_dir / output_dir / inventory_file
         if path.exists():
             invdata = fetch_inventory(MockApp(), "", str(path))
+            break
     return invdata
 
 

@@ -1,6 +1,6 @@
 import pynvim
 
-from .sphinx_nvim import Settings, get_completion_list, get_current_role
+from .sphinx_nvim import Settings, get_completion_list
 
 
 @pynvim.plugin
@@ -25,9 +25,7 @@ class Plugin:
 
         results = []
         try:
-            role = get_current_role(line, colnr)
-            if role:
-                results = get_completion_list(filepath, role, self.settings)
+            results = get_completion_list(filepath, line, colnr, self.settings)
             return results
         except Exception as e:
             self.nvim.err_write(f"[sphinx] {e}\n")
