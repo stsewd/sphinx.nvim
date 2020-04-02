@@ -23,7 +23,7 @@ You can use [sphinx-autobuild](https://github.com/GaretJax/sphinx-autobuild) to 
 
 # Coming soon
 
-- Support for Intersphinx
+- ~Support for Intersphinx~
 - Integration with [fzf](https://github.com/junegunn/fzf/)
 
 # Installation
@@ -42,19 +42,41 @@ See <https://github.com/neoclide/coc.nvim/#quick-start>.
 
 Default values are shown in the code blocks.
 
-## g:sphinx_output_dirs
+## g:sphinx_html_output_dirs
 
 Where to search for the local inventory file (`objects.inv`).
 The directories are relativa to the `conf.py` file.
 
 ```vim
-let g:sphinx_output_dirs = ['_build/html', 'build/html', '../_build/html', '../build/html']
+let g:sphinx_html_output_dirs = ['_build/html', 'build/html', '../_build/html', '../build/html']
 ```
 
-## g:sphinx_local_only
+## Intersphinx related settings
 
-Fetch all inventory files from intersphinx or just the local inventory file.
+### g:sphinx_inlclude_intersphinx_data
+
+If results should include information from Intersphinx.
 
 ```vim
-let g:sphinx_local_only = 0
+let g:sphinx_include_intersphinx_data = 1
+```
+
+### g:sphinx_doctrees_output_dirs
+
+Where to search for the environment file (`environment.pickle`),
+this file contains the inventories from Intersphinx.
+The directories are relativa to the `conf.py` file.
+
+```vim
+let g:sphinx_doctrees_output_dirs = ['_build/doctrees', 'build/doctrees', '../_build/doctrees', '../build/doctrees']
+```
+
+### g:sphinx_use_scoped_targets_only
+
+Always prefix the reference with the name of the target,
+i.e use `` :ref:`<python:comparisons>` `` instead of `` :ref:`<comparisons>` ``
+to link to the label “comparisons” in the doc set “python”.
+
+```vim
+let g:sphinx_always_use_scoped_targets = 1
 ```

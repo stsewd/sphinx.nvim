@@ -14,6 +14,8 @@ class Plugin:
             option: self.nvim.vars.get(f"sphinx_{option}")
             for option in Settings._fields
         }
+        # For debug only
+        settings_dict["nvim"] = self.nvim
         return Settings(**settings_dict)
 
     @pynvim.function("CocSphinxList", sync=True)
@@ -28,5 +30,6 @@ class Plugin:
             results = get_completion_list(filepath, line, colnr, self.settings)
             return results
         except Exception as e:
-            self.nvim.err_write(f"[sphinx] {e}\n")
+            error = str(e)
+            self.nvim.err_write(f"[sphinx] {error}\n")
         return results

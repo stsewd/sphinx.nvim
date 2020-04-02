@@ -1,3 +1,4 @@
+import pickle
 import re
 import textwrap
 from functools import namedtuple
@@ -5,13 +6,78 @@ from pathlib import Path
 
 from sphinx.ext.intersphinx import fetch_inventory
 
-Settings = namedtuple("Settings", ["output_dirs", "local_only"])
+Settings = namedtuple(
+    "Settings",
+    [
+        "html_output_dirs",
+        "doctrees_output_dirs",
+        "include_intersphinx_data",
+        "always_use_scoped_targets",
+        "nvim",
+    ],
+)
 
 ROLE_ALIASES = {
     "ref": {"label"},
     "option": {"cmdoption"},
 }
 ROLE_ANY = {"any"}
+
+
+def get_completion_list(filepath, line, column, settings):
+    role = get_current_role(line, column)
+    if not role:
+        return []
+
+    source_dir = find_source_dir(Path(filepath))
+    if not source_dir:
+        return []
+
+    local_invdata = fetch_local_inventory(source_dir, settings.html_output_dirs)
+    intersphinx_invdata = {}
+
+    if settings.include_intersphinx_data:
+        named_inventory, unamed_inventory = fetch_intersphinx_inventories(
+            source_dir, settings.doctrees_output_dirs,
+        )
+
+        if not settings.always_use_scoped_targets:
+            # Named inventories shallow each other,
+            # sort them to keep consistency.
+            for invname, invdata in sorted(named_inventory.items()):
+                for type_, value in invdata.items():
+                    for name, info in value.items():
+                        intersphinx_invdata.setdefault(type_, {})
+                        intersphinx_invdata[type_][name] = info
+
+        # TODO: investigate if the unamed inventory
+        # already includes the named inventory.
+        if not settings.always_use_scoped_targets:
+            # Unamed inventories shallow the named inventories,
+            # but the named ones can still be acceced with their name.
+            for type_, value in unamed_inventory.items():
+                for name, info in value.items():
+                    intersphinx_invdata.setdefault(type_, {})
+                    intersphinx_invdata[type_][name] = info
+
+        # Generate named inventories
+        for invname, invdata in named_inventory.items():
+            for type_, value in invdata.items():
+                for name, info in value.items():
+                    intersphinx_invdata.setdefault(type_, {})
+                    intersphinx_invdata[type_][f"{invname}:{name}"] = info
+
+    # Local inventories take precedence
+    for type_, value in local_invdata.items():
+        for name, info in value.items():
+            intersphinx_invdata.setdefault(type_, {})
+            # Always use absolute paths for the doc role
+            intersphinx_invdata[type_].pop(name, None)
+            if type_ == "std:doc":
+                name = "/" + name.lstrip("/")
+            intersphinx_invdata[type_][name] = info
+
+    return get_results(intersphinx_invdata, role)
 
 
 def get_current_role(line, column):
@@ -24,39 +90,6 @@ def get_current_role(line, column):
     role_pattern = re.compile(r"(?=:(?P<role>[a-zA-Z0-9_-]+(:[a-zA-Z0-9_-]+)*):`)")
     match = role_pattern.search(line, 0, column)
     return match.group("role") if match else None
-
-
-def get_completion_list(filepath, line, column, settings):
-    role = get_current_role(line, column)
-    results = []
-    if not role:
-        return results
-    source_dir = find_source_dir(Path(filepath))
-    if not source_dir:
-        return results
-    invdata = fetch_local_inventory(source_dir, settings.output_dirs)
-
-    for type_, value in invdata.items():
-        if not contains_role(role, type_):
-            continue
-        for name, info in value.items():
-            domain, priority, uri, display_name = info
-            if not display_name or display_name.strip() == "-":
-                display_name = name
-            info = textwrap.dedent(
-                f"""
-                {display_name}
-
-                {domain} -> {uri}
-                """
-            )
-            # Allways use absolute paths for the doc role
-            if type_ == "std:doc":
-                name = "/" + name.lstrip("/")
-
-            menu = f"[{type_}]"
-            results.append({"word": name, "menu": menu, "info": info.strip()})
-    return results
 
 
 def find_source_dir(filepath):
@@ -72,7 +105,7 @@ def find_source_dir(filepath):
     return None
 
 
-def fetch_local_inventory(source_dir, output_dirs):
+def fetch_local_inventory(source_dir, html_output_dirs):
     """Fetch the inventory file from the build output of the source directory."""
 
     class MockConfig:
@@ -85,13 +118,45 @@ def fetch_local_inventory(source_dir, output_dirs):
         config = MockConfig()
 
     inventory_file = Path("objects.inv")
-    invdata = {}
-    for output_dir in output_dirs:
+    for output_dir in html_output_dirs:
         path = source_dir / output_dir / inventory_file
         if path.exists():
-            invdata = fetch_inventory(MockApp(), "", str(path))
-            break
-    return invdata
+            return fetch_inventory(MockApp(), "", str(path))
+    return {}
+
+
+def fetch_intersphinx_inventories(source_dir, doctrees_output_dirs):
+    pickle_file = Path("environment.pickle")
+    for output_dir in doctrees_output_dirs:
+        path = source_dir / output_dir / pickle_file
+        if path.exists():
+            with path.open("rb") as f:
+                env = pickle.load(f)
+            named_inventory = getattr(env, "intersphinx_named_inventory", {})
+            unamed_inventory = getattr(env, "intersphinx_inventory", {})
+            return named_inventory, unamed_inventory
+    return {}, {}
+
+
+def get_results(invdata, role):
+    results = []
+    for type_, value in invdata.items():
+        if not contains_role(role, type_):
+            continue
+        for name, info in value.items():
+            domain, priority, uri, display_name = info
+            if not display_name or display_name.strip() == "-":
+                display_name = name
+            info = textwrap.dedent(
+                f"""
+                {display_name}
+
+                {domain} -> {uri}
+                """
+            )
+            menu = f"[{type_}]"
+            results.append({"word": name, "menu": menu, "info": info.strip()})
+    return results
 
 
 def contains_role(super_role, role):
