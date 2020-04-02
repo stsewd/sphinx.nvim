@@ -53,7 +53,7 @@ let g:sphinx_html_output_dirs = ['_build/html', 'build/html', '../_build/html', 
 
 ## Intersphinx related settings
 
-### g:sphinx_inlclude_intersphinx_data
+### g:sphinx_include_intersphinx_data
 
 If results should include information from Intersphinx.
 
@@ -71,7 +71,8 @@ The directories are relativa to the `conf.py` file.
 let g:sphinx_doctrees_output_dirs = ['_build/doctrees', 'build/doctrees', '../_build/doctrees', '../build/doctrees']
 ```
 
-### g:sphinx_use_scoped_targets_only
+### g:sphinx_always_use_scoped_targets
+
 
 Always prefix the reference with the name of the target,
 i.e use `` :ref:`<python:comparisons>` `` instead of `` :ref:`<comparisons>` ``
