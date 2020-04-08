@@ -68,7 +68,7 @@ this file contains the inventories from Intersphinx.
 The directories are relativa to the `conf.py` file.
 
 ```vim
-let g:sphinx_doctrees_output_dirs = ['_build/doctrees', 'build/doctrees', '../_build/doctrees', '../build/doctrees']
+let g:sphinx_doctrees_output_dirs = ['_build/html', 'build/html', '../_build/html', '../build/html', '_build/dirhtml', 'build/dirhtml', '../_build/dirhtml', '../build/dirhtml']
 ```
 
 ### g:sphinx_always_use_scoped_targets
