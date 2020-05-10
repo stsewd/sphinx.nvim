@@ -126,15 +126,19 @@ def fetch_local_inventory(source_dir, html_output_dirs):
 
 
 def fetch_intersphinx_inventories(source_dir, doctrees_output_dirs):
-    pickle_file = Path("environment.pickle")
-    for output_dir in doctrees_output_dirs:
-        path = source_dir / output_dir / pickle_file
-        if path.exists():
-            with path.open("rb") as f:
-                env = pickle.load(f)
-            named_inventory = getattr(env, "intersphinx_named_inventory", {})
-            unamed_inventory = getattr(env, "intersphinx_inventory", {})
-            return named_inventory, unamed_inventory
+    try:
+        pickle_file = Path("environment.pickle")
+        for output_dir in doctrees_output_dirs:
+            path = source_dir / output_dir / pickle_file
+            if path.exists():
+                with path.open("rb") as f:
+                    env = pickle.load(f)
+                named_inventory = getattr(env, "intersphinx_named_inventory", {})
+                unamed_inventory = getattr(env, "intersphinx_inventory", {})
+                return named_inventory, unamed_inventory
+    except Exception:
+        # TODO: maybe log a message
+        pass
     return {}, {}
 
 
