@@ -19,6 +19,7 @@ Settings = namedtuple(
 
 ROLE_ALIASES = {
     "ref": {"label"},
+    "numref": {"label"},
     "option": {"cmdoption"},
 }
 ROLE_ANY = {"any"}
