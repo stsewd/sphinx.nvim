@@ -50,7 +50,10 @@ Where to search for the local inventory file (`objects.inv`).
 The directories are relative to the `conf.py` file.
 
 ```vim
-let g:sphinx_html_output_dirs = ['_build/html', 'build/html', '../_build/html', '../build/html', '_build/dirhtml', 'build/dirhtml', '../_build/dirhtml', '../build/dirhtml']
+let g:sphinx_html_output_dirs = [
+      \ '_build/html', 'build/html', '../_build/html', '../build/html',
+      \ '_build/dirhtml', 'build/dirhtml', '../_build/dirhtml', '../build/dirhtml',
+      \]
 ```
 
 ## Intersphinx related settings
@@ -70,11 +73,14 @@ this file contains the inventories from Intersphinx.
 The directories are relative to the `conf.py` file.
 
 ```vim
-let g:sphinx_doctrees_output_dirs = ['_build/doctrees', 'build/doctrees', '../_build/doctrees', '../build/doctrees']
+let g:sphinx_doctrees_output_dirs = [
+      \ '_build/doctrees', 'build/doctrees', '../_build/doctrees', '../build/doctrees',
+      \ '_build/html/.doctrees', 'build/html/.doctrees', '../_build/html/.doctrees', '../build/html/.doctrees',
+      \ '_build/dirhtml/.doctrees', 'build/dirhtml/.doctrees', '../_build/dirhtml/.doctrees', '../build/dirhtml/.doctrees',
+      \]
 ```
 
 ### g:sphinx_always_use_scoped_targets
-
 
 Always prefix the reference with the name of the target,
 i.e use `` :ref:`<python:comparisons>` `` instead of `` :ref:`<comparisons>` ``
