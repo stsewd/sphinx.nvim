@@ -55,6 +55,7 @@ def test_find_source_dir(file, dir):
         (True, "py:class", "py:class"),
         (True, "std:option", "std:cmdoption"),
         (True, "option", "cmdoption"),
+        (True, "numref", "std:label"),
         (False, "ref", "doc"),
         (False, "std:label", "std:doc"),
         (False, "doc", "downloads"),
