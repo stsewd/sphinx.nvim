@@ -82,15 +82,39 @@ def get_completion_list(filepath, line, column, settings):
 
 
 def get_current_role(line, column):
-    """Parse current line with cursor position to get current role."""
-    # Role pattern:
-    # :role:`target`
-    # :role:`Text <target>`
-    # :domain:role:`target`
-    # :domain:one:two:`target`
-    role_pattern = re.compile(r"(?=:(?P<role>[a-zA-Z0-9_-]+(:[a-zA-Z0-9_-]+)*):`)")
-    match = role_pattern.search(line, 0, column)
-    return match.group("role") if match else None
+    """
+    Parse current line with cursor position to get current role.
+
+    Valid roles:
+
+    - :role:`target`
+    - :role:`Text <target>`
+    - :domain:role:`target`
+    - :domain:one:two:`target`
+    """
+
+    # Find where the role name ends
+    j = column
+    while j >= 1:
+        if line[j - 1 : j + 1] == ":`":
+            break
+        j -= 1
+
+    if j <= 0:
+        return None
+
+    # Find where the role starts
+    i = j
+    while i >= 0:
+        if line[i].isspace():
+            break
+        i -= 1
+
+    i += 1
+    if line[i] != ":" or i >= j:
+        return None
+
+    return line[i + 1 : j - 1]
 
 
 def find_source_dir(filepath):

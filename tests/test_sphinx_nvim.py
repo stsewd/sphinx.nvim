@@ -5,19 +5,20 @@ from sphinx_nvim.sphinx_nvim import contains_role, find_source_dir, get_current_
 
 
 @pytest.mark.parametrize(
-    "role, line, max_index",
+    "role, line, start, end",
     [
-        ("doc", "See the docs at :doc:`index`", 7),
-        ("ref", ":ref:`label`, foo.", 12),
-        ("ref", "- :ref:`label`, foo.", 12),
-        ("ref", "- :ref:`Text <label>`, foo.", 19),
-        ("py:mod", "Check the method :py:mod:`foo.bar`", 8),
-        ("py:mod", "Check :py:mod:`this method <foo.bar>`", 22),
-        ("rst:directive:option", ":rst:directive:option:`foo`", 4),
+        ("doc", "See the docs at :doc:`index`", 22, 27),
+        ("ref", ":ref:`label`, foo.", 6, 11),
+        ("ref", "- :ref:`label`, foo.", 8, 13),
+        ("ref", "- :ref:`Text <label>`, foo.", 8, 19),
+        ("py:mod", "Check the method :py:mod:`foo.bar`", 26, 34),
+        ("py:mod", "Check :py:mod:`this method <foo.bar>`", 15, 36),
+        ("rst:directive:option", ":rst:directive:option:`foo`", 23, 26),
+        ("ref", ":doc:`foo`, :ref:`this`.", 18, 22),
     ],
 )
-def test_get_current_role(role, line, max_index):
-    for i in range(len(line) - 1, len(line) - max_index, -1):
+def test_get_current_role(role, line, start, end):
+    for i in range(start, end + 1):
         assert role == get_current_role(line, i)
 
 
