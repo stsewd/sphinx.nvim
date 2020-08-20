@@ -1,7 +1,12 @@
 from pathlib import Path
 
 import pytest
-from sphinx_nvim.sphinx_nvim import contains_role, find_source_dir, get_current_role
+from sphinx_nvim.sphinx_nvim import (
+    contains_role,
+    fetch_local_inventory,
+    find_source_dir,
+    get_current_role,
+)
 
 
 @pytest.mark.parametrize(
@@ -64,3 +69,35 @@ def test_find_source_dir(file, dir):
 )
 def test_contains_role(expected, super_role, role):
     assert expected is contains_role(super_role, role)
+
+
+def test_fetch_local_inventory():
+    cwd = Path(__file__).parent
+    path_to_inv = cwd / "data/docs/_build/html/objects.inv"
+    result = fetch_local_inventory(path_to_inv)
+
+    expected = {
+        "std:label": {
+            "genindex": ("Test", "", "genindex.html", "Index"),
+            "index:indices and tables": (
+                "Test",
+                "",
+                "index.html#indices-and-tables",
+                "Indices and tables",
+            ),
+            "index:welcome to test's documentation!": (
+                "Test",
+                "",
+                "index.html#welcome-to-test-s-documentation",
+                "Welcome to Test’s documentation!",
+            ),
+            "modindex": ("Test", "", "py-modindex.html", "Module Index"),
+            "py-modindex": ("Test", "", "py-modindex.html", "Python Module Index"),
+            "search": ("Test", "", "search.html", "Search Page"),
+        },
+        "std:doc": {
+            "index": ("Test", "", "index.html", "Welcome to Test’s documentation!")
+        },
+    }
+
+    assert result == expected

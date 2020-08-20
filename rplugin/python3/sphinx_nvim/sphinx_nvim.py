@@ -173,6 +173,7 @@ def get_results(invdata, role):
         if not contains_role(role, type_):
             continue
         for name, info in value.items():
+            # TODO: use a named tuple for info
             domain, priority, uri, display_name = info
             if not display_name or display_name.strip() == "-":
                 display_name = name
