@@ -25,6 +25,7 @@ You can use [sphinx-autobuild](https://github.com/GaretJax/sphinx-autobuild) to 
 
 - ~Support for Intersphinx~
 - Integration with [fzf](https://github.com/junegunn/fzf/)
+- Sphinx queries for [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
 
 # Installation
 
