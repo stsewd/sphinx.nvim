@@ -34,7 +34,11 @@ def get_completion_list(filepath, line, column, settings):
     if not source_dir:
         return []
 
-    local_invdata = fetch_local_inventory(source_dir, settings.html_output_dirs)
+    path = get_inventory_file(source_dir, settings.html_output_dirs)
+    local_invdata = {}
+    if path:
+        local_invdata = fetch_local_inventory(path)
+
     intersphinx_invdata = {}
 
     if settings.include_intersphinx_data:
@@ -130,7 +134,17 @@ def find_source_dir(filepath):
     return None
 
 
-def fetch_local_inventory(source_dir, html_output_dirs):
+def get_inventory_file(source_dir, html_output_dirs):
+    inventory_file = Path("objects.inv")
+    for output_dir in html_output_dirs:
+        path = source_dir / output_dir / inventory_file
+        if path.exists():
+            return path
+
+    return None
+
+
+def fetch_local_inventory(inventory_file):
     """Fetch the inventory file from the build output of the source directory."""
 
     class MockConfig:
@@ -142,12 +156,7 @@ def fetch_local_inventory(source_dir, html_output_dirs):
         srcdir = ""
         config = MockConfig()
 
-    inventory_file = Path("objects.inv")
-    for output_dir in html_output_dirs:
-        path = source_dir / output_dir / inventory_file
-        if path.exists():
-            return fetch_inventory(MockApp(), "", str(path))
-    return {}
+    return fetch_inventory(MockApp(), "", str(inventory_file))
 
 
 def fetch_intersphinx_inventories(source_dir, doctrees_output_dirs):
