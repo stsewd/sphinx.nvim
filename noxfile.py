@@ -26,4 +26,4 @@ def format(session):
 def lint(session):
     session.install("flake8", "black")
     session.run("black", "--check", *files)
-    session.run("flake8", "nox", *files)
+    session.run("flake8", *files)
