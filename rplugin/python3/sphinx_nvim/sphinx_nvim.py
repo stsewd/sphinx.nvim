@@ -34,7 +34,7 @@ def get_completion_list(filepath, line, column, settings):
     if not source_dir:
         return []
 
-    path = get_inventory_file(source_dir, settings.html_output_dirs)
+    path = find_inventory_file(source_dir, settings.html_output_dirs)
     local_invdata = {}
     if path:
         local_invdata = fetch_local_inventory(path)
@@ -134,7 +134,7 @@ def find_source_dir(filepath):
     return None
 
 
-def get_inventory_file(source_dir, html_output_dirs):
+def find_inventory_file(source_dir, html_output_dirs):
     inventory_file = Path("objects.inv")
     for output_dir in html_output_dirs:
         path = source_dir / output_dir / inventory_file
