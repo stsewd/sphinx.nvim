@@ -1,10 +1,14 @@
 import pickle
 import re
 import textwrap
-from functools import namedtuple
+from collections import namedtuple
 from pathlib import Path
 
 from sphinx.ext.intersphinx import fetch_inventory
+
+InventoryInfo = namedtuple(
+    "InventoryInfo", ["domain", "priority", "uri", "display_name",]
+)
 
 Settings = namedtuple(
     "Settings",
