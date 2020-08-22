@@ -32,6 +32,7 @@ release = "1.0"
 # ones.
 extensions = [
     "sphinx.ext.autosectionlabel",
+    "sphinx.ext.intersphinx",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -56,3 +57,7 @@ html_theme = "alabaster"
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["_static"]
+
+intersphinx_mapping = {
+    "python": ("https://docs.python.org/3", "../docs-src/build/html/objects.inv"),
+}

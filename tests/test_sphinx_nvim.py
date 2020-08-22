@@ -3,6 +3,7 @@ from pathlib import Path
 import pytest
 from sphinx_nvim.sphinx_nvim import (
     contains_role,
+    fetch_intersphinx_inventories,
     fetch_local_inventory,
     find_source_dir,
     get_current_role,
@@ -100,4 +101,87 @@ def test_fetch_local_inventory():
         },
     }
 
+    assert result == expected
+
+
+def test_fetch_intersphinx_inventories():
+    cwd = Path(__file__).parent
+    path_to_environment = cwd / "data/docs/_build/doctrees/environment.pickle"
+    result = fetch_intersphinx_inventories(path_to_environment)
+    expected = (
+        {
+            "python": {
+                "std:label": {
+                    "genindex": (
+                        "Test src",
+                        "",
+                        "https://docs.python.org/3/genindex.html",
+                        "Index",
+                    ),
+                    "modindex": (
+                        "Test src",
+                        "",
+                        "https://docs.python.org/3/py-modindex.html",
+                        "Module Index",
+                    ),
+                    "py-modindex": (
+                        "Test src",
+                        "",
+                        "https://docs.python.org/3/py-modindex.html",
+                        "Python Module Index",
+                    ),
+                    "search": (
+                        "Test src",
+                        "",
+                        "https://docs.python.org/3/search.html",
+                        "Search Page",
+                    ),
+                },
+                "std:doc": {
+                    "index": (
+                        "Test src",
+                        "",
+                        "https://docs.python.org/3/index.html",
+                        "Welcome to Test src’s documentation!",
+                    )
+                },
+            }
+        },
+        {
+            "std:label": {
+                "genindex": (
+                    "Test src",
+                    "",
+                    "https://docs.python.org/3/genindex.html",
+                    "Index",
+                ),
+                "modindex": (
+                    "Test src",
+                    "",
+                    "https://docs.python.org/3/py-modindex.html",
+                    "Module Index",
+                ),
+                "py-modindex": (
+                    "Test src",
+                    "",
+                    "https://docs.python.org/3/py-modindex.html",
+                    "Python Module Index",
+                ),
+                "search": (
+                    "Test src",
+                    "",
+                    "https://docs.python.org/3/search.html",
+                    "Search Page",
+                ),
+            },
+            "std:doc": {
+                "index": (
+                    "Test src",
+                    "",
+                    "https://docs.python.org/3/index.html",
+                    "Welcome to Test src’s documentation!",
+                )
+            },
+        },
+    )
     assert result == expected
