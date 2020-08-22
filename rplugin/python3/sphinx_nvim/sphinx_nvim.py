@@ -42,8 +42,11 @@ def get_completion_list(filepath, line, column, settings):
     intersphinx_invdata = {}
 
     if settings.include_intersphinx_data:
-        named_inventory, unamed_inventory = fetch_intersphinx_inventories(
+        enviroment_file = find_enviroment_file(
             source_dir, settings.doctrees_output_dirs,
+        )
+        named_inventory, unamed_inventory = fetch_intersphinx_inventories(
+            enviroment_file
         )
 
         if not settings.always_use_scoped_targets:
@@ -159,17 +162,24 @@ def fetch_local_inventory(inventory_file):
     return fetch_inventory(MockApp(), "", str(inventory_file))
 
 
-def fetch_intersphinx_inventories(source_dir, doctrees_output_dirs):
+def find_enviroment_file(source_dir, doctrees_output_dirs):
+    pickle_file = Path("environment.pickle")
+    for output_dir in doctrees_output_dirs:
+        path = source_dir / output_dir / pickle_file
+        if path.exists():
+            return path
+    return None
+
+
+def fetch_intersphinx_inventories(enviroment_file):
+    if enviroment_file is None:
+        return {}, {}
     try:
-        pickle_file = Path("environment.pickle")
-        for output_dir in doctrees_output_dirs:
-            path = source_dir / output_dir / pickle_file
-            if path.exists():
-                with path.open("rb") as f:
-                    env = pickle.load(f)
-                named_inventory = getattr(env, "intersphinx_named_inventory", {})
-                unamed_inventory = getattr(env, "intersphinx_inventory", {})
-                return named_inventory, unamed_inventory
+        with enviroment_file.open("rb") as f:
+            env = pickle.load(f)
+        named_inventory = getattr(env, "intersphinx_named_inventory", {})
+        unamed_inventory = getattr(env, "intersphinx_inventory", {})
+        return named_inventory, unamed_inventory
     except Exception:
         # TODO: maybe log a message
         pass
