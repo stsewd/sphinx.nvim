@@ -7,7 +7,7 @@ from pathlib import Path
 from sphinx.ext.intersphinx import fetch_inventory
 
 InventoryInfo = namedtuple(
-    "InventoryInfo", ["domain", "priority", "uri", "display_name",]
+    "InventoryInfo", ["domain", "priority", "uri", "display_name"]
 )
 
 Settings = namedtuple(
@@ -60,7 +60,7 @@ def get_completion_list(filepath, line, column, settings):
                 for type_, value in invdata.items():
                     for name, info in value.items():
                         intersphinx_invdata.setdefault(type_, {})
-                        intersphinx_invdata[type_][name] = info
+                        intersphinx_invdata[type_][name] = InventoryInfo(info)
 
         # TODO: investigate if the unamed inventory
         # already includes the named inventory.
@@ -70,14 +70,16 @@ def get_completion_list(filepath, line, column, settings):
             for type_, value in unamed_inventory.items():
                 for name, info in value.items():
                     intersphinx_invdata.setdefault(type_, {})
-                    intersphinx_invdata[type_][name] = info
+                    intersphinx_invdata[type_][name] = InventoryInfo(info)
 
         # Generate named inventories
         for invname, invdata in named_inventory.items():
             for type_, value in invdata.items():
                 for name, info in value.items():
                     intersphinx_invdata.setdefault(type_, {})
-                    intersphinx_invdata[type_][f"{invname}:{name}"] = info
+                    intersphinx_invdata[type_][f"{invname}:{name}"] = InventoryInfo(
+                        info
+                    )
 
     # Local inventories take precedence
     for type_, value in local_invdata.items():
@@ -87,7 +89,7 @@ def get_completion_list(filepath, line, column, settings):
             intersphinx_invdata[type_].pop(name, None)
             if type_ == "std:doc":
                 name = "/" + name.lstrip("/")
-            intersphinx_invdata[type_][name] = info
+            intersphinx_invdata[type_][name] = InventoryInfo(info)
 
     return get_results(intersphinx_invdata, role)
 
@@ -196,19 +198,18 @@ def get_results(invdata, role):
         if not contains_role(role, type_):
             continue
         for name, info in value.items():
-            # TODO: use a named tuple for info
-            domain, priority, uri, display_name = info
+            display_name = info.display_name
             if not display_name or display_name.strip() == "-":
                 display_name = name
-            info = textwrap.dedent(
+            menu_info = textwrap.dedent(
                 f"""
                 {display_name}
 
-                {domain} -> {uri}
+                {info.domain} -> {info.uri}
                 """
             )
             menu = f"[{type_}]"
-            results.append({"word": name, "menu": menu, "info": info.strip()})
+            results.append({"word": name, "menu": menu, "info": menu_info.strip()})
     return results
 
 
