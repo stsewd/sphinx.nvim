@@ -2,7 +2,6 @@ from pathlib import Path
 
 import pytest
 from sphinx_nvim.sphinx_nvim import (
-    InventoryInfo,
     contains_role,
     fetch_intersphinx_inventories,
     fetch_local_inventory,
@@ -80,34 +79,29 @@ def test_fetch_local_inventory():
 
     expected = {
         "std:label": {
-            "genindex": InventoryInfo("Test", "", "genindex.html", "Index"),
-            "index:indices and tables": InventoryInfo(
-                "Test", "", "index.html#indices-and-tables", "Indices and tables",
+            "genindex": ("Test", "", "genindex.html", "Index"),
+            "index:indices and tables": (
+                "Test",
+                "",
+                "index.html#indices-and-tables",
+                "Indices and tables",
             ),
-            "index:welcome to test's documentation!": InventoryInfo(
+            "index:welcome to test's documentation!": (
                 "Test",
                 "",
                 "index.html#welcome-to-test-s-documentation",
                 "Welcome to Test’s documentation!",
             ),
-            "modindex": InventoryInfo("Test", "", "py-modindex.html", "Module Index"),
-            "py-modindex": InventoryInfo(
-                "Test", "", "py-modindex.html", "Python Module Index"
-            ),
-            "search": InventoryInfo("Test", "", "search.html", "Search Page"),
+            "modindex": ("Test", "", "py-modindex.html", "Module Index"),
+            "py-modindex": ("Test", "", "py-modindex.html", "Python Module Index"),
+            "search": ("Test", "", "search.html", "Search Page"),
         },
         "std:doc": {
-            "index": InventoryInfo(
-                "Test", "", "index.html", "Welcome to Test’s documentation!"
-            )
+            "index": ("Test", "", "index.html", "Welcome to Test’s documentation!")
         },
     }
 
     assert result == expected
-
-    for type_, value in result.items():
-        for name, info in value.items():
-            assert isinstance(info, InventoryInfo)
 
 
 def test_fetch_intersphinx_inventories():
@@ -118,25 +112,25 @@ def test_fetch_intersphinx_inventories():
         {
             "python": {
                 "std:label": {
-                    "genindex": InventoryInfo(
+                    "genindex": (
                         "Test src",
                         "",
                         "https://docs.python.org/3/genindex.html",
                         "Index",
                     ),
-                    "modindex": InventoryInfo(
+                    "modindex": (
                         "Test src",
                         "",
                         "https://docs.python.org/3/py-modindex.html",
                         "Module Index",
                     ),
-                    "py-modindex": InventoryInfo(
+                    "py-modindex": (
                         "Test src",
                         "",
                         "https://docs.python.org/3/py-modindex.html",
                         "Python Module Index",
                     ),
-                    "search": InventoryInfo(
+                    "search": (
                         "Test src",
                         "",
                         "https://docs.python.org/3/search.html",
@@ -144,7 +138,7 @@ def test_fetch_intersphinx_inventories():
                     ),
                 },
                 "std:doc": {
-                    "index": InventoryInfo(
+                    "index": (
                         "Test src",
                         "",
                         "https://docs.python.org/3/index.html",
@@ -155,22 +149,25 @@ def test_fetch_intersphinx_inventories():
         },
         {
             "std:label": {
-                "genindex": InventoryInfo(
-                    "Test src", "", "https://docs.python.org/3/genindex.html", "Index",
+                "genindex": (
+                    "Test src",
+                    "",
+                    "https://docs.python.org/3/genindex.html",
+                    "Index",
                 ),
-                "modindex": InventoryInfo(
+                "modindex": (
                     "Test src",
                     "",
                     "https://docs.python.org/3/py-modindex.html",
                     "Module Index",
                 ),
-                "py-modindex": InventoryInfo(
+                "py-modindex": (
                     "Test src",
                     "",
                     "https://docs.python.org/3/py-modindex.html",
                     "Python Module Index",
                 ),
-                "search": InventoryInfo(
+                "search": (
                     "Test src",
                     "",
                     "https://docs.python.org/3/search.html",
@@ -178,7 +175,7 @@ def test_fetch_intersphinx_inventories():
                 ),
             },
             "std:doc": {
-                "index": InventoryInfo(
+                "index": (
                     "Test src",
                     "",
                     "https://docs.python.org/3/index.html",
@@ -188,14 +185,3 @@ def test_fetch_intersphinx_inventories():
         },
     )
     assert result == expected
-
-    named_inventory, unamed_inventory = result
-
-    for invname, invdata in named_inventory.items():
-        for type_, value in invdata.items():
-            for name, info in value.items():
-                assert isinstance(info, InventoryInfo)
-
-    for type_, value in unamed_inventory.items():
-        for name, info in value.items():
-            assert isinstance(info, InventoryInfo)
