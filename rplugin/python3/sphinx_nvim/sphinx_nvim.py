@@ -60,7 +60,7 @@ def get_completion_list(filepath, line, column, settings):
                 for type_, value in invdata.items():
                     for name, info in value.items():
                         intersphinx_invdata.setdefault(type_, {})
-                        intersphinx_invdata[type_][name] = InventoryInfo(info)
+                        intersphinx_invdata[type_][name] = InventoryInfo(*info)
 
         # TODO: investigate if the unamed inventory
         # already includes the named inventory.
@@ -70,7 +70,7 @@ def get_completion_list(filepath, line, column, settings):
             for type_, value in unamed_inventory.items():
                 for name, info in value.items():
                     intersphinx_invdata.setdefault(type_, {})
-                    intersphinx_invdata[type_][name] = InventoryInfo(info)
+                    intersphinx_invdata[type_][name] = InventoryInfo(*info)
 
         # Generate named inventories
         for invname, invdata in named_inventory.items():
@@ -78,7 +78,7 @@ def get_completion_list(filepath, line, column, settings):
                 for name, info in value.items():
                     intersphinx_invdata.setdefault(type_, {})
                     intersphinx_invdata[type_][f"{invname}:{name}"] = InventoryInfo(
-                        info
+                        *info
                     )
 
     # Local inventories take precedence
@@ -89,7 +89,7 @@ def get_completion_list(filepath, line, column, settings):
             intersphinx_invdata[type_].pop(name, None)
             if type_ == "std:doc":
                 name = "/" + name.lstrip("/")
-            intersphinx_invdata[type_][name] = InventoryInfo(info)
+            intersphinx_invdata[type_][name] = InventoryInfo(*info)
 
     return get_results(intersphinx_invdata, role)
 
