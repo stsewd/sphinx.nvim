@@ -21,11 +21,13 @@ so you need to have built your docs at least once to get suggestions,
 and rebuild when your docs change to get the up to date suggestions.
 You can use [sphinx-autobuild](https://github.com/GaretJax/sphinx-autobuild) to rebuild your docs automatically when there is a change.
 
+## [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
+
+Extra [highlight queries](after/queries/rst/highlights.scm).
+
 # Coming soon
 
-- ~Support for Intersphinx~
 - Integration with [fzf](https://github.com/junegunn/fzf/)
-- Sphinx queries for [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
 
 # Installation
 

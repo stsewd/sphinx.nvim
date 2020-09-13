@@ -27,7 +27,12 @@ class Plugin:
 
         results = []
         try:
-            results = get_completion_list(filepath, line, colnr, self.settings)
+            results = get_completion_list(
+                filepath,
+                line,
+                colnr,
+                self.settings,
+            )
             return results
         except Exception as e:
             error = str(e)

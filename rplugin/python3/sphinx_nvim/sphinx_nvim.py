@@ -47,7 +47,8 @@ def get_completion_list(filepath, line, column, settings):
 
     if settings.include_intersphinx_data:
         enviroment_file = find_enviroment_file(
-            source_dir, settings.doctrees_output_dirs,
+            source_dir,
+            settings.doctrees_output_dirs,
         )
         named_inventory, unamed_inventory = fetch_intersphinx_inventories(
             enviroment_file
