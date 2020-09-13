@@ -8,6 +8,7 @@
    name: (type) @function.builtin)
  (#vim-match?
   @function.builtin
+  ; https://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html
   "^(toctree)|(versionadded|versionchanged|deprecated|seealso|centered|hlist)|(highlight|code-block|literalinclude)|(glossary)|(sectionauthor|codeauthor)|(index)|(only)|(tabularcolumns)|(productionlist)::$"))
 
 ; https://www.sphinx-doc.org/en/master/usage/restructuredtext/roles.html#substitutions
