@@ -5,7 +5,10 @@ endif
 let g:sphinx_html_output_dirs = get(
       \ g:,
       \ 'sphinx_html_output_dirs',
-      \ ['_build/html', 'build/html', '../_build/html', '../build/html', '_build/dirhtml', 'build/dirhtml', '../_build/dirhtml', '../build/dirhtml']
+      \ ['_build/html', '../_build/html', '_build/dirhtml', '../_build/dirhtml', 
+      \  'build/html', '../build/html', 'build/dirhtml', '../build/dirhtml',
+      \  '.tox/docs-dirhtml/tmp/build', '../.tox/docs-dirhtml/tmp/build',
+      \  '.tox/docs-html/tmp/build', '.tox/docs-html/tmp/build']
       \)
 let g:sphinx_doctrees_output_dirs = get(
       \ g:,
