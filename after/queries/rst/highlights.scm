@@ -6,10 +6,10 @@
 
 ((directive
    name: (type) @function.builtin)
- (#vim-match?
+ (#match?
   @function.builtin
   ; https://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html
-  "^(toctree)|(versionadded|versionchanged|deprecated|seealso|centered|hlist)|(highlight|code-block|literalinclude)|(glossary)|(sectionauthor|codeauthor)|(index)|(only)|(tabularcolumns)|(productionlist)::$"))
+  "^(toctree)|(versionadded|versionchanged|deprecated|seealso|centered|hlist)|(highlight|code-block|literalinclude)|(glossary)|(sectionauthor|codeauthor)|(index)|(only)|(tabularcolumns)|(productionlist)$"))
 
 ; https://www.sphinx-doc.org/en/master/usage/restructuredtext/roles.html#substitutions
 ; TODO: replace this with #match? when figure out how to make it work with `|`
