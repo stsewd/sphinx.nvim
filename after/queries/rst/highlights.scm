@@ -65,7 +65,7 @@
    name: (type) @function.builtin)
  (#match?
   @function.builtin
-  "^(default-domain|option|envar|program|describe|object|)$"))
+  "^(default-domain|option|envar|program|describe|object)$"))
 
 ; JavaScript domain
 ; https://www.sphinx-doc.org/en/master/usage/restructuredtext/domains.html#the-javascript-domain
