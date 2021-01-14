@@ -22,8 +22,30 @@
 ((directive
    name: (type) @_type
    body: (body (content) @rst))
- (#match? @_type "^(py|c|cpp|js|rst):$"))
+ (#match? @_type "^(py|c|cpp|js|rst):"))
+
 ((directive
    name: (type) @_type
    body: (body (content) @rst))
  (#match? @_type "^(default-domain|option|envar|program|describe|object)$"))
+
+;; Directives from common extensions
+
+;;; sphinx-tabs
+;;; https://github.com/executablebooks/sphinx-tabs
+((directive
+   name: (type) @_type
+   body: (body (content) @rst))
+ (#match? @_type "^(tabs|tab|group-tab)$"))
+
+((directive
+   name: (type) @_type
+   body: (body (arguments) @language (content) @content))
+ (#match? @_type "^code-tab$"))
+
+;;; http domain
+;;; https://sphinxcontrib-httpdomain.readthedocs.io/
+((directive
+   name: (type) @_type
+   body: (body (content) @rst))
+ (#match? @_type "^(http):"))
