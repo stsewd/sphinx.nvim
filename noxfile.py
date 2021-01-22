@@ -18,7 +18,7 @@ def test(session):
 def format(session):
     """Run black code formater."""
     session.install("black", "isort")
-    session.run("isort", "--recursive", *files)
+    session.run("isort", "--profile", "black", *files)
     session.run("black", *files)
 
 
