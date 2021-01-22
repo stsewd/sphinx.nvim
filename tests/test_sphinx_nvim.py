@@ -1,8 +1,7 @@
 from pathlib import Path
 
 import pytest
-from sphinx.ext.intersphinx import setup as intersphinx_setup
-from sphinx.testing.fixtures import *
+from sphinx.testing.fixtures import *  # noqa
 from sphinx.testing.path import path
 from sphinx_nvim.sphinx_nvim import (
     contains_role,
