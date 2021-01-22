@@ -1,6 +1,9 @@
 from pathlib import Path
 
 import pytest
+from sphinx.ext.intersphinx import setup as intersphinx_setup
+from sphinx.testing.fixtures import *
+from sphinx.testing.path import path
 from sphinx_nvim.sphinx_nvim import (
     contains_role,
     fetch_intersphinx_inventories,
@@ -72,9 +75,13 @@ def test_contains_role(expected, super_role, role):
     assert expected is contains_role(super_role, role)
 
 
-def test_fetch_local_inventory():
+def test_fetch_local_inventory(make_app):
     cwd = Path(__file__).parent
-    path_to_inv = cwd / "data/docs/_build/html/objects.inv"
+    srcdir = path(str(cwd / "data/docs/"))
+    app = make_app("html", srcdir=srcdir)
+    app.build(force_all=True)
+
+    path_to_inv = Path(app.outdir) / "objects.inv"
     result = fetch_local_inventory(path_to_inv)
 
     expected = {
@@ -104,9 +111,18 @@ def test_fetch_local_inventory():
     assert result == expected
 
 
-def test_fetch_intersphinx_inventories():
+def test_fetch_intersphinx_inventories(make_app):
     cwd = Path(__file__).parent
-    path_to_environment = cwd / "data/docs/_build/doctrees/environment.pickle"
+
+    srcdir = path(str(cwd / "data/docs-src/source"))
+    app = make_app("html", srcdir=srcdir)
+    app.build()
+
+    srcdir = path(str(cwd / "data/docs/"))
+    app = make_app("html", srcdir=srcdir)
+    app.build()
+
+    path_to_environment = Path(app.doctreedir) / "environment.pickle"
     result = fetch_intersphinx_inventories(path_to_environment)
     expected = (
         {

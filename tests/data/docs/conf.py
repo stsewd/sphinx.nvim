@@ -14,6 +14,7 @@
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
+from pathlib import Path
 
 # -- Project information -----------------------------------------------------
 
@@ -58,6 +59,9 @@ html_theme = "alabaster"
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["_static"]
 
+inv_file = Path(__file__).parent / "../docs-src/source/_build/html/objects.inv"
+inv_file = inv_file.resolve()
+
 intersphinx_mapping = {
-    "python": ("https://docs.python.org/3", "../docs-src/build/html/objects.inv"),
+    "python": ("https://docs.python.org/3", str(inv_file)),
 }
