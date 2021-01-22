@@ -116,9 +116,18 @@ def test_fetch_intersphinx_inventories(make_app):
     srcdir = path(str(cwd / "data/docs-src/source"))
     app = make_app("html", srcdir=srcdir)
     app.build()
+    inv_file = Path(app.outdir) / "objects.inv"
 
     srcdir = path(str(cwd / "data/docs/"))
-    app = make_app("html", srcdir=srcdir)
+    app = make_app(
+        "html",
+        srcdir=srcdir,
+        confoverrides={
+            "intersphinx_mapping": {
+                "python": ("https://docs.python.org/3", str(inv_file)),
+            },
+        },
+    )
     app.build()
 
     path_to_environment = Path(app.doctreedir) / "environment.pickle"

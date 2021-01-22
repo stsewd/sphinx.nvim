@@ -14,8 +14,6 @@
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
-from pathlib import Path
-
 # -- Project information -----------------------------------------------------
 
 project = "Test"
@@ -57,11 +55,4 @@ html_theme = "alabaster"
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ["_static"]
-
-inv_file = Path(__file__).parent / "../docs-src/source/_build/html/objects.inv"
-inv_file = inv_file.resolve()
-
-intersphinx_mapping = {
-    "python": ("https://docs.python.org/3", str(inv_file)),
-}
+# html_static_path = ["_static"]
