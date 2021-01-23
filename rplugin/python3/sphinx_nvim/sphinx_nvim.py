@@ -3,6 +3,7 @@ import re
 import textwrap
 from collections import namedtuple
 from pathlib import Path
+from typing import List
 
 from sphinx.ext.intersphinx import fetch_inventory
 
@@ -31,15 +32,56 @@ ROLE_ALIASES = {
 ROLE_ANY = {"any"}
 
 
-def get_completion_list(filepath, line, column, settings):
+def get_completion_list(filepath: Path, line: str, column: int, settings: Settings):
     role = get_current_role(line, column, default=settings.default_role)
     if not role:
         return []
 
-    source_dir = find_source_dir(Path(filepath))
+    source_dir = find_source_dir_from_file(Path(filepath))
     if not source_dir:
         return []
 
+    inventory_data = get_inventory_data(source_dir, settings)
+    return get_completion_results(inventory_data, role)
+
+
+def get_references_list(cwd: Path, role: str, settings: Settings):
+    source_dir = find_source_dir_from_cwd(cwd=cwd)
+    if not source_dir:
+        return []
+
+    inventory_data = get_inventory_data(source_dir, settings)
+
+    results = []
+    for type_, value in inventory_data.items():
+        if role and not contains_role(role, type_):
+            continue
+        for name, info in value.items():
+            display_name = info.display_name
+            if not display_name or display_name.strip() == "-":
+                display_name = name
+
+            label = format(f"[{type_}]", color="yellow")
+            display_name = format(display_name, color="yellow", format="bold")
+            name = format(name, color="blue")
+            domain = format(info.domain, color="bright-white")
+            arrow = format("->", color="bright-white", format="bold")
+            uri = format(info.uri, color="bright-white", format="italic")
+            results.append(f"{label} {display_name}  {name}  {domain} {arrow} {uri}")
+    return results
+
+
+def get_roles_list(cwd: Path, settings: Settings):
+    source_dir = find_source_dir_from_cwd(cwd=cwd)
+    if not source_dir:
+        return []
+
+    inventory_data = get_inventory_data(source_dir, settings)
+    results = [type_ for type_ in inventory_data]
+    return results
+
+
+def get_inventory_data(source_dir: Path, settings: Settings):
     path = find_inventory_file(source_dir, settings.html_output_dirs)
     local_invdata = {}
     if path:
@@ -94,10 +136,10 @@ def get_completion_list(filepath, line, column, settings):
                 name = "/" + name.lstrip("/")
             intersphinx_invdata[type_][name] = InventoryInfo(*info)
 
-    return get_results(intersphinx_invdata, role)
+    return intersphinx_invdata
 
 
-def get_current_role(line, column, default="any"):
+def get_current_role(line: str, column: int, default: str = "any"):
     """
     Parse current line with cursor position to get current role.
 
@@ -141,7 +183,7 @@ def get_current_role(line, column, default="any"):
     return line[i + 1 : j - 1]
 
 
-def find_source_dir(filepath):
+def find_source_dir_from_file(filepath: Path):
     """Find the source directory of the Sphinx project."""
     conf_file = Path("conf.py")
     source_dir = filepath.parent
@@ -154,7 +196,25 @@ def find_source_dir(filepath):
     return None
 
 
-def find_inventory_file(source_dir, html_output_dirs):
+def find_source_dir_from_cwd(cwd: Path, depth: int = 5):
+    conf_file = Path("conf.py")
+
+    if depth <= 0:
+        return None
+
+    path = cwd / conf_file
+    if path.exists():
+        return cwd
+
+    for source_dir in cwd.iterdir():
+        if source_dir.is_dir():
+            source_dir = find_source_dir_from_cwd(source_dir, depth=depth - 1)
+            if source_dir:
+                return source_dir
+    return None
+
+
+def find_inventory_file(source_dir: Path, html_output_dirs: List[str]):
     inventory_file = Path("objects.inv")
     for output_dir in html_output_dirs:
         path = source_dir / output_dir / inventory_file
@@ -164,7 +224,7 @@ def find_inventory_file(source_dir, html_output_dirs):
     return None
 
 
-def fetch_local_inventory(inventory_file):
+def fetch_local_inventory(inventory_file: Path):
     """Fetch the inventory file from the build output of the source directory."""
 
     class MockConfig:
@@ -179,7 +239,7 @@ def fetch_local_inventory(inventory_file):
     return fetch_inventory(MockApp(), "", str(inventory_file))
 
 
-def find_enviroment_file(source_dir, doctrees_output_dirs):
+def find_enviroment_file(source_dir: Path, doctrees_output_dirs: List[str]):
     pickle_file = Path("environment.pickle")
     for output_dir in doctrees_output_dirs:
         path = source_dir / output_dir / pickle_file
@@ -188,7 +248,7 @@ def find_enviroment_file(source_dir, doctrees_output_dirs):
     return None
 
 
-def fetch_intersphinx_inventories(enviroment_file):
+def fetch_intersphinx_inventories(enviroment_file: Path):
     if enviroment_file is None:
         return {}, {}
     try:
@@ -203,7 +263,8 @@ def fetch_intersphinx_inventories(enviroment_file):
     return {}, {}
 
 
-def get_results(invdata, role):
+def get_completion_results(invdata, role: str):
+    """Filter `invdata` by `role` and return a dictionary for the completion menu."""
     results = []
     for type_, value in invdata.items():
         if not contains_role(role, type_):
@@ -224,7 +285,7 @@ def get_results(invdata, role):
     return results
 
 
-def contains_role(super_role, role):
+def contains_role(super_role: str, role: str):
     """Check if `super_role` contains `role`."""
     role = re.sub("^std:", "", role)
     super_role = re.sub("^std:", "", super_role)
@@ -233,3 +294,34 @@ def contains_role(super_role, role):
         or role == super_role
         or role in ROLE_ALIASES.get(super_role, [])
     )
+
+
+def format(text: str, color: str = None, format: str = "normal"):
+    """
+    Format `text` using ANSI color escape sequences.
+
+    https://stackoverflow.com/questions/4842424/list-of-ansi-color-escape-sequences
+    """
+    format_flags = {
+        "normal": "0",
+        "bold": "1",
+        "italic": "3",
+        "underline": "4",
+    }
+    color_flags = {
+        "black": "30",
+        "red": "31",
+        "green": "32",
+        "yellow": "33",
+        "blue": "34",
+        "white": "37",
+        "bright-black": "90",
+        "bright-red": "91",
+        "bright-green": "92",
+        "bright-yellow": "93",
+        "bright-blue": "94",
+        "bright-white": "97",
+    }
+    flags = format_flags.get(format, "") + ";" + color_flags.get(color, "")
+    flags = flags.strip(";")
+    return f"\033[{flags}m{text}\033[0m"

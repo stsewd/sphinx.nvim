@@ -30,4 +30,10 @@ endif
 let g:sphinx_include_intersphinx_data = get(g:, 'sphinx_include_intersphinx_data', 1)
 let g:sphinx_always_use_scoped_targets = get(g:, 'sphinx_always_use_scoped_targets', 1)
 
+" FZF integration
+let s:prefix = get(g:, 'fzf_command_prefix', '')
+let s:command = s:prefix . 'Sphinx'
+execute 'command! -bang -nargs=? -complete=custom,sphinx#complete_roles ' . s:command . ' call sphinx#list(<bang>0, <q-args>)'
+
+
 let g:loaded_sphinx = 1

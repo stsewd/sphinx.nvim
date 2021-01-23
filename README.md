@@ -4,7 +4,7 @@
 
 [Sphinx](https://www.sphinx-doc.org/) integrations for Neovim.
 
-**This plugin is still under development, some functionalities may change.**
+**This plugin is still under development, many things may and will change.**
 
 ![sphinx-nvim-coc](https://user-images.githubusercontent.com/4975310/105564899-353d8f80-5cf2-11eb-8f05-63b1ed5c3106.gif)
 
@@ -14,6 +14,7 @@
 * [Available integrations](#available-integrations)
   - [coc.nvim](#cocnvim)
   - [nvim-treesitter](#nvim-treesitter)
+  - [fzf](#fzf)
 * [Coming soon](#coming-soon)
 * [Configuration](#configuration)
 
@@ -38,6 +39,15 @@ so you need to have built your docs at least once to get suggestions,
 and rebuild when your docs change to get the up to date suggestions.
 You can use [sphinx-autobuild](https://github.com/GaretJax/sphinx-autobuild) to rebuild your docs automatically when there is a change.
 
+## [fzf](https://github.com/junegunn/fzf/)
+
+List all references with `:Sphinx` or `:Sphinx {role-name}` (tab completion supported!).
+Copy the reference name with `Enter` or copy the link with `Ctrl-F`
+(they are copied to the default register `"`, just press `p` to paste).
+
+**Note** If you have [fzf.vim](https://github.com/junegunn/fzf.vim) installed,
+this plugin will respect your `g:fzf_command_prefix` setting.
+
 ## [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
 
 Extra [queries](after/queries/rst/) for `rst`.
@@ -46,7 +56,7 @@ and injections for directives from Sphinx and popular extensions (like ``code-bl
 
 # Coming soon
 
-- Integration with [fzf](https://github.com/junegunn/fzf/)
+- Completion for roles and directives names.
 
 # Configuration
 
