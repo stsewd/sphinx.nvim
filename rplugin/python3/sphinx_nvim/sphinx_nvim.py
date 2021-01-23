@@ -3,6 +3,7 @@ import re
 import textwrap
 from collections import namedtuple
 from pathlib import Path
+from typing import List
 
 from sphinx.ext.intersphinx import fetch_inventory
 
@@ -203,7 +204,7 @@ def find_source_dir_from_cwd(cwd: Path, depth: int = 5):
     return None
 
 
-def find_inventory_file(source_dir: Path, html_output_dirs: list[str]):
+def find_inventory_file(source_dir: Path, html_output_dirs: List[str]):
     inventory_file = Path("objects.inv")
     for output_dir in html_output_dirs:
         path = source_dir / output_dir / inventory_file
@@ -228,7 +229,7 @@ def fetch_local_inventory(inventory_file: Path):
     return fetch_inventory(MockApp(), "", str(inventory_file))
 
 
-def find_enviroment_file(source_dir: Path, doctrees_output_dirs: list[str]):
+def find_enviroment_file(source_dir: Path, doctrees_output_dirs: List[str]):
     pickle_file = Path("environment.pickle")
     for output_dir in doctrees_output_dirs:
         path = source_dir / output_dir / pickle_file
