@@ -18,11 +18,14 @@ from sphinx_nvim.sphinx_nvim import (
         ("doc", "See the docs at :doc:`index`", 22, 27),
         ("ref", ":ref:`label`, foo.", 6, 11),
         ("ref", "- :ref:`label`, foo.", 8, 13),
-        ("ref", "- :ref:`Text <label>`, foo.", 8, 19),
-        ("py:mod", "Check the method :py:mod:`foo.bar`", 26, 34),
+        ("ref", "- :ref:`Text <label>`, foo.", 8, 20),
+        ("py:mod", "Check the method :py:mod:`foo.bar`", 26, 33),
         ("py:mod", "Check :py:mod:`this method <foo.bar>`", 15, 36),
         ("rst:directive:option", ":rst:directive:option:`foo`", 23, 26),
         ("ref", ":doc:`foo`, :ref:`this`.", 18, 22),
+        ("ref", ":doc:`foo`, :ref:`this`.", 18, 22),
+        ("any", "`default` role", 1, 8),
+        ("any", "default `role`.", 9, 13),
     ],
 )
 def test_get_current_role(role, line, start, end):
