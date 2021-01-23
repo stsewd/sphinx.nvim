@@ -1,14 +1,18 @@
 from pathlib import Path
+from unittest import mock
 
 import pytest
 from sphinx.testing.fixtures import *  # noqa
 from sphinx.testing.path import path
 from sphinx_nvim.sphinx_nvim import (
+    Settings,
     contains_role,
     fetch_intersphinx_inventories,
     fetch_local_inventory,
+    find_source_dir_from_cwd,
     find_source_dir_from_file,
     get_current_role,
+    get_roles_list,
 )
 
 
@@ -47,6 +51,24 @@ def test_find_source_dir_from_file(file, dir):
     file = cwd / file
     dir = cwd / dir
     assert dir == find_source_dir_from_file(file)
+
+
+@pytest.mark.parametrize(
+    "cwd, dir",
+    [
+        (".", "tests/data/docs-src/source/"),
+        ("tests/", "tests/data/docs-src/source/"),
+        ("tests/data/", "tests/data/docs-src/source/"),
+        ("tests/data/docs-src/", "tests/data/docs-src/source/"),
+        ("tests/data/docs-src/source/", "tests/data/docs-src/source/"),
+        ("tests/data/docs/", "tests/data/docs/"),
+    ],
+)
+def test_find_source_dir_from_cwd(cwd, dir):
+    root = Path(__file__).parent.parent.resolve()
+    cwd = root / cwd
+    dir = root / dir
+    assert dir == find_source_dir_from_cwd(cwd)
 
 
 @pytest.mark.parametrize(
@@ -212,3 +234,26 @@ def test_fetch_intersphinx_inventories(make_app):
         },
     )
     assert result == expected
+
+
+def test_get_roles_list(make_app):
+    cwd = Path(__file__).parent / "data/docs/"
+    srcdir = path(str(cwd))
+    app = make_app("html", srcdir=srcdir)
+    app.build()
+
+    settings = Settings(
+        html_output_dirs=[str(app.outdir)],
+        doctrees_output_dirs=[str(app.outdir)],
+        include_intersphinx_data=False,
+        always_use_scoped_targets=True,
+        default_role="any",
+        nvim=mock.MagicMock(),
+    )
+
+    expected = {
+        "std:doc",
+        "std:label",
+    }
+    result = get_roles_list(cwd=cwd, settings=settings)
+    assert set(result) == expected
