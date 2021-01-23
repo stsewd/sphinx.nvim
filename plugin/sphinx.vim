@@ -2,6 +2,7 @@ if exists('g:loaded_sphinx')
   finish
 endif
 
+let g:sphinx_default_role = get(g:, 'sphinx_default_role', 'any')
 let g:sphinx_html_output_dirs = get(
       \ g:,
       \ 'sphinx_html_output_dirs',
