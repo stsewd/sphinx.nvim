@@ -1,7 +1,24 @@
 function! sphinx#execute(lines) abort
-  " TODO: copy link?
-  " TODO: copy name?
-  echomsg a:lines
+  if len(a:lines) <= 2
+    return
+  endif
+
+  let l:key = a:lines[1]
+  let l:line = a:lines[2]
+
+  let l:name = split(l:line, '  ')[-2]
+  let l:link = split(l:line, ' ')[-1]
+
+  if l:key == 'enter'
+    let l:item = l:name
+  elseif l:key == 'ctrl-f'
+    let l:item = l:link
+  else
+    return
+  endif
+
+  let @" = l:item
+  echomsg 'Copied: ' . l:item
 endfunction
 
 
@@ -19,11 +36,10 @@ function! sphinx#list(bang, role) abort
     let l:results = FzfSphinxList(l:role)
   endif
 
-  let l:keybindings = ['enter']
+  let l:keybindings = ['enter', 'ctrl-f']
   let l:valid_keys = join(l:keybindings, ',')
   let l:fzf_options = [
         \ '--prompt', l:prompt,
-        \ '--multi',
         \ '--expect', l:valid_keys,
         \ '--nth', '..-3',
         \ '--ansi',
