@@ -6,12 +6,29 @@
 
 **This plugin is still under development, some functionalities may change.**
 
+![sphinx-nvim-coc](https://user-images.githubusercontent.com/4975310/105564899-353d8f80-5cf2-11eb-8f05-63b1ed5c3106.gif)
+
+# Contents
+
+* [Installation](#installation)
+* [Available integration](#available-integrations)
+  - [coc.nvim](#cocnvim)
+  - [nvim-treesitter](#nvim-treesitter)
+* [Coming soon](#coming-soon)
+* [Configuration](#configuration)
+
+# Installation
+
+Install using [vim-plug](https://github.com/junegunn/vim-plug).
+Put this in your `init.vim`.
+
+```vim
+Plug 'stsewd/sphinx.nvim', { 'do': ':UpdateRemotePlugins' }
+```
+
 # Available integrations
 
 ## [coc.nvim](https://github.com/neoclide/coc.nvim/)
-
-![01](https://user-images.githubusercontent.com/4975310/77864888-f41f4080-71f0-11ea-9108-741df3cbf1ce.png)
-![02](https://user-images.githubusercontent.com/4975310/77864900-fed9d580-71f0-11ea-8e5e-60c8df1c06e9.png)
 
 Source for [cross-referencing roles](https://www.sphinx-doc.org/en/master/usage/restructuredtext/roles.html#cross-referencing-syntax),
 i.e `:ref:`, `:doc:`, `py:func`, etc.
@@ -23,23 +40,13 @@ You can use [sphinx-autobuild](https://github.com/GaretJax/sphinx-autobuild) to 
 
 ## [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
 
-Extra [queries](after/queries/rst/).
+Extra [queries](after/queries/rst/) for `rst`.
+This includes highlights for Sphinx directives and roles,
+and injections for directives from Sphinx and popular extensions (like ``code-block`` or ``tabs``).
 
 # Coming soon
 
 - Integration with [fzf](https://github.com/junegunn/fzf/)
-
-# Installation
-
-Install using [vim-plug](https://github.com/junegunn/vim-plug).
-Put this in your `init.vim`.
-
-```vim
-Plug 'stsewd/sphinx.nvim', { 'do': ':UpdateRemotePlugins' }
-```
-
-**Note:** you need to have `coc.nvim` installed to use the `coc.nvim` integration.
-See <https://github.com/neoclide/coc.nvim/#quick-start>.
 
 # Configuration
 
