@@ -23,7 +23,7 @@ You can use [sphinx-autobuild](https://github.com/GaretJax/sphinx-autobuild) to 
 
 ## [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
 
-Extra [highlight queries](after/queries/rst/highlights.scm).
+Extra [queries](after/queries/rst/).
 
 # Coming soon
 
@@ -62,9 +62,20 @@ The directories are relative to the `conf.py` file.
 
 ```vim
 let g:sphinx_html_output_dirs = [
-      \ '_build/html', 'build/html', '../_build/html', '../build/html',
-      \ '_build/dirhtml', 'build/dirhtml', '../_build/dirhtml', '../build/dirhtml',
+      \ '_build/html', 'build/html',
+      \ '../_build/html', '../build/html',
+      \ '_build/dirhtml', 'build/dirhtml',
+      \ '../_build/dirhtml', '../build/dirhtml',
       \]
+```
+
+### g:sphinx_default_dirs
+
+If you want to extend the defaults values from `g:sphinx_html_output_dirs` and `g:sphinx_doctrees_output_dirs`
+instead of replacing them.
+
+```vim
+let g:sphinx_default_dirs = 1
 ```
 
 ## Intersphinx related settings
@@ -85,9 +96,12 @@ The directories are relative to the `conf.py` file.
 
 ```vim
 let g:sphinx_doctrees_output_dirs = [
-      \ '_build/doctrees', 'build/doctrees', '../_build/doctrees', '../build/doctrees',
-      \ '_build/html/.doctrees', 'build/html/.doctrees', '../_build/html/.doctrees', '../build/html/.doctrees',
-      \ '_build/dirhtml/.doctrees', 'build/dirhtml/.doctrees', '../_build/dirhtml/.doctrees', '../build/dirhtml/.doctrees',
+      \ '_build/doctrees', 'build/doctrees',
+      \ '../_build/doctrees', '../build/doctrees',
+      \ '_build/html/.doctrees', 'build/html/.doctrees',
+      \ '../_build/html/.doctrees', '../build/html/.doctrees',
+      \ '_build/dirhtml/.doctrees', 'build/dirhtml/.doctrees',
+      \ '../_build/dirhtml/.doctrees', '../build/dirhtml/.doctrees',
       \]
 ```
 
