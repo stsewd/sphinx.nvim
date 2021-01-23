@@ -2,7 +2,12 @@ from pathlib import Path
 
 import pynvim
 
-from .sphinx_nvim import Settings, get_completion_list, get_references_list
+from .sphinx_nvim import (
+    Settings,
+    get_completion_list,
+    get_references_list,
+    get_roles_list,
+)
 
 
 @pynvim.plugin
@@ -47,6 +52,14 @@ class Plugin:
         results = get_references_list(
             cwd=Path(self.nvim.funcs.getcwd()),
             role=role,
+            settings=self.settings,
+        )
+        return results
+
+    @pynvim.function("SphinxRoles", sync=True)
+    def list_roles(self, args):
+        results = get_roles_list(
+            cwd=Path(self.nvim.funcs.getcwd()),
             settings=self.settings,
         )
         return results

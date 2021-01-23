@@ -71,6 +71,16 @@ def get_references_list(cwd: Path, role: str, settings: Settings):
     return results
 
 
+def get_roles_list(cwd: Path, settings: Settings):
+    source_dir = find_source_dir_from_cwd(cwd=cwd)
+    if not source_dir:
+        return []
+
+    inventory_data = get_inventory_data(source_dir, settings)
+    results = [type_ for type_ in inventory_data]
+    return results
+
+
 def get_inventory_data(source_dir: Path, settings: Settings):
     path = find_inventory_file(source_dir, settings.html_output_dirs)
     local_invdata = {}
