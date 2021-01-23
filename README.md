@@ -11,7 +11,7 @@
 # Contents
 
 * [Installation](#installation)
-* [Available integration](#available-integrations)
+* [Available integrations](#available-integrations)
   - [coc.nvim](#cocnvim)
   - [nvim-treesitter](#nvim-treesitter)
 * [Coming soon](#coming-soon)
