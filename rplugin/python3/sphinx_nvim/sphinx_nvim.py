@@ -264,6 +264,7 @@ def fetch_intersphinx_inventories(enviroment_file: Path):
 
 
 def get_completion_results(invdata, role: str):
+    """Filter `invdata` by `role` and return a dictionary for the completion menu."""
     results = []
     for type_, value in invdata.items():
         if not contains_role(role, type_):
@@ -297,7 +298,7 @@ def contains_role(super_role: str, role: str):
 
 def format(text: str, color: str = None, format: str = "normal"):
     """
-    Format the text using ANSI color escape sequences.
+    Format `text` using ANSI color escape sequences.
 
     https://stackoverflow.com/questions/4842424/list-of-ansi-color-escape-sequences
     """
