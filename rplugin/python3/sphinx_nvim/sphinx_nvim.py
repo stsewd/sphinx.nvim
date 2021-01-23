@@ -17,6 +17,8 @@ Settings = namedtuple(
         "doctrees_output_dirs",
         "include_intersphinx_data",
         "always_use_scoped_targets",
+        "default_role",
+        # For debug only.
         "nvim",
     ],
 )
@@ -30,7 +32,7 @@ ROLE_ANY = {"any"}
 
 
 def get_completion_list(filepath, line, column, settings):
-    role = get_current_role(line, column)
+    role = get_current_role(line, column, default=settings.default_role)
     if not role:
         return []
 
@@ -95,7 +97,7 @@ def get_completion_list(filepath, line, column, settings):
     return get_results(intersphinx_invdata, role)
 
 
-def get_current_role(line, column):
+def get_current_role(line, column, default="any"):
     """
     Parse current line with cursor position to get current role.
 
@@ -105,16 +107,24 @@ def get_current_role(line, column):
     - :role:`Text <target>`
     - :domain:role:`target`
     - :domain:one:two:`target`
+
+    Default role:
+
+    - `Foo`
+    - `Foo <bar>`
     """
 
-    # Find where the role name ends
-    j = column
-    while j >= 1:
-        if line[j - 1 : j + 1] == ":`":
-            break
-        j -= 1
+    if column >= len(line):
+        return None
 
-    if j <= 0:
+    # Find where the role name ends
+    for j in range(column, -1, -1):
+        if line[j] == "`":
+            if j == 0 or line[j - 1].isspace():
+                return default
+            if line[j - 1] == ":":
+                break
+    else:
         return None
 
     # Find where the role starts

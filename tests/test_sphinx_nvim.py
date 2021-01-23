@@ -1,6 +1,8 @@
 from pathlib import Path
 
 import pytest
+from sphinx.testing.fixtures import *  # noqa
+from sphinx.testing.path import path
 from sphinx_nvim.sphinx_nvim import (
     contains_role,
     fetch_intersphinx_inventories,
@@ -16,11 +18,14 @@ from sphinx_nvim.sphinx_nvim import (
         ("doc", "See the docs at :doc:`index`", 22, 27),
         ("ref", ":ref:`label`, foo.", 6, 11),
         ("ref", "- :ref:`label`, foo.", 8, 13),
-        ("ref", "- :ref:`Text <label>`, foo.", 8, 19),
-        ("py:mod", "Check the method :py:mod:`foo.bar`", 26, 34),
+        ("ref", "- :ref:`Text <label>`, foo.", 8, 20),
+        ("py:mod", "Check the method :py:mod:`foo.bar`", 26, 33),
         ("py:mod", "Check :py:mod:`this method <foo.bar>`", 15, 36),
         ("rst:directive:option", ":rst:directive:option:`foo`", 23, 26),
         ("ref", ":doc:`foo`, :ref:`this`.", 18, 22),
+        ("ref", ":doc:`foo`, :ref:`this`.", 18, 22),
+        ("any", "`default` role", 1, 8),
+        ("any", "default `role`.", 9, 13),
     ],
 )
 def test_get_current_role(role, line, start, end):
@@ -72,9 +77,13 @@ def test_contains_role(expected, super_role, role):
     assert expected is contains_role(super_role, role)
 
 
-def test_fetch_local_inventory():
+def test_fetch_local_inventory(make_app):
     cwd = Path(__file__).parent
-    path_to_inv = cwd / "data/docs/_build/html/objects.inv"
+    srcdir = path(str(cwd / "data/docs/"))
+    app = make_app("html", srcdir=srcdir)
+    app.build(force_all=True)
+
+    path_to_inv = Path(app.outdir) / "objects.inv"
     result = fetch_local_inventory(path_to_inv)
 
     expected = {
@@ -104,9 +113,27 @@ def test_fetch_local_inventory():
     assert result == expected
 
 
-def test_fetch_intersphinx_inventories():
+def test_fetch_intersphinx_inventories(make_app):
     cwd = Path(__file__).parent
-    path_to_environment = cwd / "data/docs/_build/doctrees/environment.pickle"
+
+    srcdir = path(str(cwd / "data/docs-src/source"))
+    app = make_app("html", srcdir=srcdir)
+    app.build()
+    inv_file = Path(app.outdir) / "objects.inv"
+
+    srcdir = path(str(cwd / "data/docs/"))
+    app = make_app(
+        "html",
+        srcdir=srcdir,
+        confoverrides={
+            "intersphinx_mapping": {
+                "python": ("https://docs.python.org/3", str(inv_file)),
+            },
+        },
+    )
+    app.build()
+
+    path_to_environment = Path(app.doctreedir) / "environment.pickle"
     result = fetch_intersphinx_inventories(path_to_environment)
     expected = (
         {

@@ -47,6 +47,14 @@ Default values are shown in the code blocks.
 
 ## General settings
 
+### g:sphinx_default_role
+
+[Default role](https://www.sphinx-doc.org/page/usage/configuration.html#confval-default_role) (words surrounded by `` `single back-quotes` ``).
+
+```vim
+let g:sphinx_default_role = 'any'
+```
+
 ### g:sphinx_html_output_dirs
 
 Where to search for the local inventory file (`objects.inv`).
