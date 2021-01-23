@@ -7,7 +7,7 @@ from sphinx_nvim.sphinx_nvim import (
     contains_role,
     fetch_intersphinx_inventories,
     fetch_local_inventory,
-    find_source_dir,
+    find_source_dir_from_file,
     get_current_role,
 )
 
@@ -42,11 +42,11 @@ def test_get_current_role(role, line, start, end):
         ("data/docs-src/source/nested/index.rst", "data/docs-src/source/"),
     ],
 )
-def test_find_source_dir(file, dir):
+def test_find_source_dir_from_file(file, dir):
     cwd = Path(__file__).parent
     file = cwd / file
     dir = cwd / dir
-    assert dir == find_source_dir(file)
+    assert dir == find_source_dir_from_file(file)
 
 
 @pytest.mark.parametrize(

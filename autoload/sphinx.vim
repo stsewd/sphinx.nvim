@@ -1,5 +1,5 @@
 function! sphinx#execute(lines) abort
-  " TODO: copy/insert/open link?
+  " TODO: copy/insert link?
   " TODO: copy/insert name?
   echomsg a:lines
 endfunction
@@ -20,11 +20,11 @@ function! sphinx#list(bang, role) abort
 
   let l:keybindings = ['enter']
   let l:valid_keys = join(l:keybindings, ',')
-  "\ '--nth', '1',
   let l:fzf_options = [
         \ '--prompt', l:prompt,
         \ '--multi',
         \ '--expect', l:valid_keys,
+        \ '--nth', '..-3',
         \ '--ansi',
         \ '--print-query',
         \]

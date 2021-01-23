@@ -4,7 +4,7 @@
 
 [Sphinx](https://www.sphinx-doc.org/) integrations for Neovim.
 
-**This plugin is still under development, some functionalities may change.**
+**This plugin is still under development, many things may and will change.**
 
 ![sphinx-nvim-coc](https://user-images.githubusercontent.com/4975310/105564899-353d8f80-5cf2-11eb-8f05-63b1ed5c3106.gif)
 
@@ -15,6 +15,7 @@
   - [coc.nvim](#cocnvim)
   - [nvim-treesitter](#nvim-treesitter)
   - [fzf](#fzf)
+* [Coming soon](#coming-soon)
 * [Configuration](#configuration)
 
 # Installation
@@ -50,6 +51,10 @@ this plugin will respect your `g:fzf_command_prefix` setting.
 Extra [queries](after/queries/rst/) for `rst`.
 This includes highlights for Sphinx directives and roles,
 and injections for directives from Sphinx and popular extensions (like ``code-block`` or ``tabs``).
+
+# Coming soon
+
+Completion for roles and directives names.
 
 # Configuration
 
