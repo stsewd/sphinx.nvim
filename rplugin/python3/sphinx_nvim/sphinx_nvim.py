@@ -40,6 +40,34 @@ def get_completion_list(filepath, line, column, settings):
     if not source_dir:
         return []
 
+    inventory_data = get_inventory_data(source_dir, settings)
+    return get_completion_results(inventory_data, role)
+
+
+def get_references_list(cwd, role, settings):
+    source_dir = cwd / "tests/data/docs/"
+    inventory_data = get_inventory_data(source_dir, settings)
+
+    results = []
+    for type_, value in inventory_data.items():
+        if role and not contains_role(role, type_):
+            continue
+        for name, info in value.items():
+            display_name = info.display_name
+            if not display_name or display_name.strip() == "-":
+                display_name = name
+
+            label = format(f"[{type_}]", color="yellow")
+            display_name = format(display_name, color="yellow", format="bold")
+            name = format(name, color="blue")
+            domain = format(info.domain, color="bright-white")
+            arrow = format("->", color="bright-white", format="bold")
+            uri = format(info.uri, color="bright-white", format="italic")
+            results.append(f"{label} {display_name}  {name}  {domain} {arrow} {uri}")
+    return results
+
+
+def get_inventory_data(source_dir, settings):
     path = find_inventory_file(source_dir, settings.html_output_dirs)
     local_invdata = {}
     if path:
@@ -94,7 +122,7 @@ def get_completion_list(filepath, line, column, settings):
                 name = "/" + name.lstrip("/")
             intersphinx_invdata[type_][name] = InventoryInfo(*info)
 
-    return get_results(intersphinx_invdata, role)
+    return intersphinx_invdata
 
 
 def get_current_role(line, column, default="any"):
@@ -203,7 +231,7 @@ def fetch_intersphinx_inventories(enviroment_file):
     return {}, {}
 
 
-def get_results(invdata, role):
+def get_completion_results(invdata, role):
     results = []
     for type_, value in invdata.items():
         if not contains_role(role, type_):
@@ -233,3 +261,34 @@ def contains_role(super_role, role):
         or role == super_role
         or role in ROLE_ALIASES.get(super_role, [])
     )
+
+
+def format(text, color=None, format="normal"):
+    """
+    Format the text using ANSI color escape sequences.
+
+    https://stackoverflow.com/questions/4842424/list-of-ansi-color-escape-sequences
+    """
+    format_flags = {
+        "normal": "0",
+        "bold": "1",
+        "italic": "3",
+        "underline": "4",
+    }
+    color_flags = {
+        "black": "30",
+        "red": "31",
+        "green": "32",
+        "yellow": "33",
+        "blue": "34",
+        "white": "37",
+        "bright-black": "90",
+        "bright-red": "91",
+        "bright-green": "92",
+        "bright-yellow": "93",
+        "bright-blue": "94",
+        "bright-white": "97",
+    }
+    flags = format_flags.get(format, "") + ";" + color_flags.get(color, "")
+    flags = flags.strip(";")
+    return f"\033[{flags}m{text}\033[0m"

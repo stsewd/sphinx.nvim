@@ -14,7 +14,7 @@
 * [Available integrations](#available-integrations)
   - [coc.nvim](#cocnvim)
   - [nvim-treesitter](#nvim-treesitter)
-* [Coming soon](#coming-soon)
+  - [fzf](#fzf)
 * [Configuration](#configuration)
 
 # Installation
@@ -38,15 +38,18 @@ so you need to have built your docs at least once to get suggestions,
 and rebuild when your docs change to get the up to date suggestions.
 You can use [sphinx-autobuild](https://github.com/GaretJax/sphinx-autobuild) to rebuild your docs automatically when there is a change.
 
+## [fzf](https://github.com/junegunn/fzf/)
+
+List all references with `:Sphinx` or `:Sphinx {role-name}`.
+
+**Note** If you have [fzf.vim](https://github.com/junegunn/fzf.vim) installed,
+this plugin will respect your `g:fzf_command_prefix` setting.
+
 ## [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
 
 Extra [queries](after/queries/rst/) for `rst`.
 This includes highlights for Sphinx directives and roles,
 and injections for directives from Sphinx and popular extensions (like ``code-block`` or ``tabs``).
-
-# Coming soon
-
-- Integration with [fzf](https://github.com/junegunn/fzf/)
 
 # Configuration
 
