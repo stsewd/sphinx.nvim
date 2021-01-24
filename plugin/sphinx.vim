@@ -32,8 +32,8 @@ let g:sphinx_always_use_scoped_targets = get(g:, 'sphinx_always_use_scoped_targe
 
 " FZF integration
 let s:prefix = get(g:, 'fzf_command_prefix', '')
-let s:command = s:prefix . 'Sphinx'
-execute 'command! -bang -nargs=? -complete=custom,sphinx#complete_roles ' . s:command . ' call sphinx#list(<bang>0, <q-args>)'
+execute 'command! -bang -nargs=? -complete=custom,sphinx#complete_ref_roles ' . s:prefix . 'SphinxRefs' . ' call sphinx#list_refs(<bang>0, <q-args>)'
+execute 'command! -bang -nargs=0 ' . s:prefix . 'SphinxFiles' . ' call sphinx#list_files(<bang>0)'
 
 
 let g:loaded_sphinx = 1

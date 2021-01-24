@@ -1,4 +1,6 @@
-function! sphinx#execute(lines) abort
+" # SphinxRefs
+
+function! sphinx#copy_ref(lines) abort
   if len(a:lines) <= 2
     return
   endif
@@ -22,18 +24,18 @@ function! sphinx#execute(lines) abort
 endfunction
 
 
-function! sphinx#list(bang, role) abort
+function! sphinx#list_refs(bang, role) abort
   let l:role = trim(a:role)
 
-  let l:prompt = 'Sphinx> '
+  let l:prompt = 'SphinxRefs> '
   if !empty(l:role)
-    let l:prompt = 'Sphinx > ' . l:role . '> '
+    let l:prompt .= l:role . '> '
   endif
 
-  let l:results = FzfSphinxList(l:role)
+  let l:results = SphinxListRefs(l:role)
   " For some reason some times the first call returns null
   if type(l:results) == type(v:null)
-    let l:results = FzfSphinxList(l:role)
+    let l:results = SphinxListRefs(l:role)
   endif
 
   let l:keybindings = ['enter', 'ctrl-f']
@@ -46,10 +48,10 @@ function! sphinx#list(bang, role) abort
         \ '--print-query',
         \]
   call fzf#run(fzf#wrap(
-        \ 'Sphinx',
+        \ 'SphinxRefs',
         \ {
         \   'source': l:results,
-        \   'sink*': function('sphinx#execute'),
+        \   'sink*': function('sphinx#copy_ref'),
         \   'options': l:fzf_options,
         \ },
         \ a:bang,
@@ -57,16 +59,62 @@ function! sphinx#list(bang, role) abort
 endfunction
 
 
-function! sphinx#complete_roles(arglead, cmdline, cursorpos) abort
+function! sphinx#complete_ref_roles(arglead, cmdline, cursorpos) abort
   let l:cmdlist = split(a:cmdline)
   if len(l:cmdlist) > 2 || len(l:cmdlist) > 1 && empty(a:arglead)
     return ''
   endif
 
-  let l:results =  SphinxRoles()
+  let l:results =  SphinxRefRoles()
   " For some reason some times the first call returns null
   if type(l:results) == type(v:null)
-    let l:results = SphinxRoles()
+    let l:results = SphinxRefRoles()
   endif
   return join(l:results, "\n")
+endfunction
+
+
+" # SphinxFiles
+
+function! sphinx#open_file(lines) abort
+  if len(a:lines) <= 2
+    return
+  endif
+
+  let l:key = a:lines[1]
+  let l:files = map(a:lines[2:], 'split(v:val)[-1]')
+  for l:file in l:files
+    execute 'edit ' . l:file
+  endfor
+endfunction
+
+
+function! sphinx#list_files(bang) abort
+  let l:prompt = 'SphinxFiles> '
+
+  let l:results = SphinxListFiles()
+  " For some reason some times the first call returns null
+  if type(l:results) == type(v:null)
+    let l:results = SphinxListFiles()
+  endif
+
+  let l:keybindings = ['enter']
+  let l:valid_keys = join(l:keybindings, ',')
+  let l:fzf_options = [
+        \ '--prompt', l:prompt,
+        \ '--expect', l:valid_keys,
+        \ '--multi',
+        \ '--ansi',
+        \ '--nth', '..-3,-1',
+        \ '--print-query',
+        \]
+  call fzf#run(fzf#wrap(
+        \ 'SphinxFiles',
+        \ {
+        \   'source': l:results,
+        \   'sink*': function('sphinx#open_file'),
+        \   'options': l:fzf_options,
+        \ },
+        \ a:bang,
+        \))
 endfunction

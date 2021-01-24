@@ -5,8 +5,9 @@ import pynvim
 from .sphinx_nvim import (
     Settings,
     get_completion_list,
+    get_files_list,
+    get_ref_roles_list,
     get_references_list,
-    get_roles_list,
 )
 
 
@@ -30,7 +31,9 @@ class Plugin:
         options = args[0]
         filepath = options.get("filepath")
         line = options.get("line")
-        colnr = options.get("colnr") - 1
+        # Vim starts columns with 1,
+        # and coc sends the position after the last inserted char.
+        colnr = options.get("colnr") - 2
 
         results = []
         try:
@@ -46,8 +49,8 @@ class Plugin:
             self.nvim.err_write(f"[sphinx] {error}\n")
         return results
 
-    @pynvim.function("FzfSphinxList", sync=True)
-    def fzf_list(self, args):
+    @pynvim.function("SphinxListRefs", sync=True)
+    def list_refs(self, args):
         role = args[0] if args else None
         results = get_references_list(
             cwd=Path(self.nvim.funcs.getcwd()),
@@ -56,9 +59,17 @@ class Plugin:
         )
         return results
 
-    @pynvim.function("SphinxRoles", sync=True)
-    def list_roles(self, args):
-        results = get_roles_list(
+    @pynvim.function("SphinxListFiles", sync=True)
+    def list_files(self, args):
+        results = get_files_list(
+            cwd=Path(self.nvim.funcs.getcwd()),
+            settings=self.settings,
+        )
+        return results
+
+    @pynvim.function("SphinxRefRoles", sync=True)
+    def list_ref_roles(self, args):
+        results = get_ref_roles_list(
             cwd=Path(self.nvim.funcs.getcwd()),
             settings=self.settings,
         )

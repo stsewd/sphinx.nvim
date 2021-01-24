@@ -53,6 +53,7 @@ def get_references_list(cwd: Path, role: str, settings: Settings):
     inventory_data = get_inventory_data(source_dir, settings)
 
     results = []
+    arrow = format("->", color="bright-white", format="bold")
     for type_, value in inventory_data.items():
         if role and not contains_role(role, type_):
             continue
@@ -65,19 +66,41 @@ def get_references_list(cwd: Path, role: str, settings: Settings):
             display_name = format(display_name, color="yellow", format="bold")
             name = format(name, color="blue")
             domain = format(info.domain, color="bright-white")
-            arrow = format("->", color="bright-white", format="bold")
             uri = format(info.uri, color="bright-white", format="italic")
             results.append(f"{label} {display_name}  {name}  {domain} {arrow} {uri}")
     return results
 
 
-def get_roles_list(cwd: Path, settings: Settings):
+def get_ref_roles_list(cwd: Path, settings: Settings):
     source_dir = find_source_dir_from_cwd(cwd=cwd)
     if not source_dir:
         return []
 
     inventory_data = get_inventory_data(source_dir, settings)
     results = [type_ for type_ in inventory_data]
+    return results
+
+
+def get_files_list(cwd: Path, settings: Settings):
+    source_dir = find_source_dir_from_cwd(cwd=cwd)
+    if not source_dir:
+        return []
+
+    file = find_enviroment_file(
+        source_dir=source_dir,
+        doctrees_output_dirs=settings.doctrees_output_dirs,
+    )
+    if not file:
+        return []
+
+    results = []
+    env = get_environment(file)
+    arrow = format("->", color="bright-white", format="bold")
+    for doc, title in env.titles.items():
+        title = format(title.astext(), color="yellow", format="bold")
+        path = Path(env.doc2path(doc)).relative_to(cwd)
+        path = format(str(path), color="bright-white", format="italic")
+        results.append(f"{title} {arrow} {path}")
     return results
 
 
@@ -139,6 +162,24 @@ def get_inventory_data(source_dir: Path, settings: Settings):
     return intersphinx_invdata
 
 
+def is_role_start(line: str, column: int):
+    if column >= len(line):
+        return False
+
+    if line[column] != ":":
+        return False
+
+    if column <= 0 or line[column - 1].isspace():
+        return True
+    return False
+
+
+def is_directive_start(line: str, column: int):
+    if column >= len(line):
+        return False
+    return line[column - 2 : column + 1] == ".. "
+
+
 def get_current_role(line: str, column: int, default: str = "any"):
     """
     Parse current line with cursor position to get current role.
@@ -166,6 +207,7 @@ def get_current_role(line: str, column: int, default: str = "any"):
                 return default
             if line[j - 1] == ":":
                 break
+            return None
     else:
         return None
 
@@ -251,16 +293,26 @@ def find_enviroment_file(source_dir: Path, doctrees_output_dirs: List[str]):
 def fetch_intersphinx_inventories(enviroment_file: Path):
     if enviroment_file is None:
         return {}, {}
+
+    env = get_environment(enviroment_file)
+    if not env:
+        return {}, {}
+
+    with enviroment_file.open("rb") as f:
+        env = pickle.load(f)
+    named_inventory = getattr(env, "intersphinx_named_inventory", {})
+    unamed_inventory = getattr(env, "intersphinx_inventory", {})
+    return named_inventory, unamed_inventory
+
+
+def get_environment(file: Path):
     try:
-        with enviroment_file.open("rb") as f:
+        with file.open("rb") as f:
             env = pickle.load(f)
-        named_inventory = getattr(env, "intersphinx_named_inventory", {})
-        unamed_inventory = getattr(env, "intersphinx_inventory", {})
-        return named_inventory, unamed_inventory
+        return env
     except Exception:
         # TODO: maybe log a message
-        pass
-    return {}, {}
+        return None
 
 
 def get_completion_results(invdata, role: str):
