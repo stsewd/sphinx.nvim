@@ -1,6 +1,6 @@
 function! coc#source#sphinx#init() abort
   return {
-        \ 'priority': 1,
+        \ 'priority': 99,
         \ 'shortcut': 'Sphinx',
         \ 'filtypes': ['rst'],
         \ 'triggerCharacters': ['`', '<'],

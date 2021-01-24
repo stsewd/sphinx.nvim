@@ -41,9 +41,10 @@ You can use [sphinx-autobuild](https://github.com/GaretJax/sphinx-autobuild) to 
 
 ## [fzf](https://github.com/junegunn/fzf/)
 
-List all references with `:Sphinx` or `:Sphinx {role-name}` (tab completion supported!).
-Copy the reference name with `Enter` or copy the link with `Ctrl-F`
-(they are copied to the default register `"`, just press `p` to paste).
+- List and open files with `SphinxFiles`.
+- List all references with `:SphinxRefs` or `:SphinxRefs {role-name}` (tab completion supported!).
+  Copy the reference name with `Enter` or copy the link with `Ctrl-F`
+  (they are copied to the default register `"`, just press `p` to paste).
 
 **Note** If you have [fzf.vim](https://github.com/junegunn/fzf.vim) installed,
 this plugin will respect your `g:fzf_command_prefix` setting.

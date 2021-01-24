@@ -12,24 +12,24 @@ from sphinx_nvim.sphinx_nvim import (
     find_source_dir_from_cwd,
     find_source_dir_from_file,
     get_current_role,
-    get_roles_list,
+    get_ref_roles_list,
 )
 
 
 @pytest.mark.parametrize(
     "role, line, start, end",
     [
-        ("doc", "See the docs at :doc:`index`", 22, 27),
-        ("ref", ":ref:`label`, foo.", 6, 11),
-        ("ref", "- :ref:`label`, foo.", 8, 13),
-        ("ref", "- :ref:`Text <label>`, foo.", 8, 20),
-        ("py:mod", "Check the method :py:mod:`foo.bar`", 26, 33),
-        ("py:mod", "Check :py:mod:`this method <foo.bar>`", 15, 36),
-        ("rst:directive:option", ":rst:directive:option:`foo`", 23, 26),
-        ("ref", ":doc:`foo`, :ref:`this`.", 18, 22),
-        ("ref", ":doc:`foo`, :ref:`this`.", 18, 22),
-        ("any", "`default` role", 1, 8),
-        ("any", "default `role`.", 9, 13),
+        ("doc", "See the docs at :doc:`index`", 22, 26),
+        ("ref", ":ref:`label`, foo.", 6, 10),
+        ("ref", "- :ref:`label`, foo.", 8, 12),
+        ("ref", "- :ref:`Text <label>`, foo.", 8, 19),
+        ("py:mod", "Check the method :py:mod:`foo.bar`", 26, 32),
+        ("py:mod", "Check :py:mod:`this method <foo.bar>`", 15, 35),
+        ("rst:directive:option", ":rst:directive:option:`foo`", 23, 25),
+        ("ref", ":doc:`foo`, :ref:`this`.", 18, 21),
+        ("ref", ":doc:`foo`, :ref:`this`.", 18, 21),
+        ("any", "`default` role", 1, 7),
+        ("any", "default `role`.", 9, 12),
     ],
 )
 def test_get_current_role(role, line, start, end):
@@ -236,7 +236,7 @@ def test_fetch_intersphinx_inventories(make_app):
     assert result == expected
 
 
-def test_get_roles_list(make_app):
+def test_get_ref_roles_list(make_app):
     cwd = Path(__file__).parent / "data/docs/"
     srcdir = path(str(cwd))
     app = make_app("html", srcdir=srcdir)
@@ -255,5 +255,5 @@ def test_get_roles_list(make_app):
         "std:doc",
         "std:label",
     }
-    result = get_roles_list(cwd=cwd, settings=settings)
+    result = get_ref_roles_list(cwd=cwd, settings=settings)
     assert set(result) == expected
