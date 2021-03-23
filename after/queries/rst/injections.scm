@@ -31,6 +31,12 @@
 
 ;; Directives from common extensions
 
+;;; Sphinx docs
+((directive
+   name: (type) @_type
+   body: (body (content) @rst))
+ (#eq? @_type "confval"))
+
 ;;; sphinx-tabs
 ;;; https://github.com/executablebooks/sphinx-tabs
 ((directive
@@ -49,3 +55,15 @@
    name: (type) @_type
    body: (body (content) @rst))
  (#match? @_type "^(http):"))
+
+((directive
+   name: (type) @_type
+   body: (body (arguments) @language (content) @content))
+ (#eq? @_type "sourcecode"))
+
+;;; sphinx-prompt
+;;; https://github.com/sbrunner/sphinx-prompt
+((directive
+   name: (type) @_type
+   body: (body (arguments) @language (content) @content))
+ (#match? @_type "^(prompt)$"))
