@@ -3,20 +3,24 @@
 ((directive
    name: (type) @_type
    body: (body (content) @rst))
- (#match?
+ (#any-of?
   @_type
-  "^(toctree)|(versionadded|versionchanged|deprecated|seealso|centered|hlist)|(glossary)|(index)|(productionlist)$"))
+  "toctree"
+  "versionadded" "versionchanged" "deprecated" "seealso" "centered" "hlist"
+  "glossary"
+  "index"
+  "productionlist"))
 
 ((directive
    name: (type) @_type
    body: (body (arguments) @rst))
- (#match? @_type "^(sectionauthor|codeauthor)$"))
+ (#any-of? @_type "sectionauthor" "codeauthor"))
 
 ;; Code highlight directives
 ((directive
    name: (type) @_type
    body: (body (arguments) @language (content) @content))
- (#match? @_type "^(highlight|code-block)$"))
+ (#eq? @_type "highlight"))
 
 ;; Most directives from domains accept nested content
 ((directive
@@ -27,7 +31,7 @@
 ((directive
    name: (type) @_type
    body: (body (content) @rst))
- (#match? @_type "^(default-domain|option|envar|program|describe|object)$"))
+ (#any-of? @_type "default-domain" "option" "envar" "program" "describe" "object"))
 
 ;; Directives from common extensions
 
@@ -42,12 +46,12 @@
 ((directive
    name: (type) @_type
    body: (body (content) @rst))
- (#match? @_type "^(tabs|tab|group-tab)$"))
+ (#any-of? @_type "tabs" "tab" "group-tab"))
 
 ((directive
    name: (type) @_type
    body: (body (arguments) @language (content) @content))
- (#match? @_type "^code-tab$"))
+ (#eq? @_type "code-tab"))
 
 ;;; http domain
 ;;; https://sphinxcontrib-httpdomain.readthedocs.io/
@@ -66,4 +70,4 @@
 ((directive
    name: (type) @_type
    body: (body (arguments) @language (content) @content))
- (#match? @_type "^(prompt)$"))
+ (#eq? @_type "prompt"))
