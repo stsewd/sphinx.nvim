@@ -1,3 +1,5 @@
+; extends
+
 ((role) @function.builtin
  (#any-of?
   @function.builtin

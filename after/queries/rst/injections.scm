@@ -1,3 +1,5 @@
+; extends
+
 ;; Directives with nested content
 
 ((directive
