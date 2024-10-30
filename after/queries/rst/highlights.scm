@@ -193,3 +193,12 @@
  (#eq?
   @function.builtin
   ":math:numref:"))
+
+; sphinxnotes-strike
+; https://sphinx.silverrainz.me/strike/
+((interpreted_text
+  (role) @_role
+  "interpreted_text" @markup.strikethrough)
+  (#any-of?
+   @_role
+   ":del:" ":strike:"))
