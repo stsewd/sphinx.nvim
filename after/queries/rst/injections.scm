@@ -80,3 +80,16 @@
    name: (type) @_type
    body: (body (arguments) @injection.language (content) @injection.content))
  (#eq? @_type "prompt"))
+
+;;; sphinx-design
+;;; https://sphinx-design.readthedocs.io/
+((directive
+   name: (type) @_type
+   body: (body (content) @injection.content))
+ (#any-of?
+  @_type
+  "grid" "grid-item" "grid-item-card"
+  "card" "card-carousel"
+  "dropdown"
+  "tabset" "tab-set-code" "tab-item")
+ (#set! injection.language "rst"))
