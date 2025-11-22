@@ -69,11 +69,6 @@
  (#match? @_type "^(http):")
  (#set! injection.language "rst"))
 
-((directive
-   name: (type) @_type
-   body: (body (arguments) @injection.language (content) @injection.content))
- (#eq? @_type "sourcecode"))
-
 ;;; sphinx-prompt
 ;;; https://github.com/sbrunner/sphinx-prompt
 ((directive
