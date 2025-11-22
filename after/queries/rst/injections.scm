@@ -11,6 +11,7 @@
   "versionadded" "versionchanged" "deprecated" "seealso" "centered" "hlist"
   "glossary"
   "index"
+  "only"
   "productionlist")
  (#set! injection.language "rst"))
 
